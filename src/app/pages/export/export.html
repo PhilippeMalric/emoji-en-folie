@@ -1,0 +1,338 @@
+<h2>Export</h2>
+
+@if (!selected().length) {
+  <p class="hint">Aucun emoji sélectionné. Va à “Sélection”.</p>
+} @else {
+  <div class="layout">
+    <!-- LEFT: Controls -->
+    <section class="panel">
+      <p class="hint">{{ selected().length }} emojis sélectionnés.</p>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="w320">
+          <mat-label>Mode</mat-label>
+          <mat-select [value]="mode()" (selectionChange)="mode.set($event.value)">
+            <mat-option value="A">Mode A — 1 vignette (emoji + texte)</mat-option>
+            <mat-option value="B">Mode B — 2 vignettes (emoji seul + texte seul)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w320">
+          <mat-label>Aperçu carte</mat-label>
+          <mat-select
+            [value]="previewHex() ?? selected()[0].hexcode"
+            (selectionChange)="setPreviewHex($event.value)"
+          >
+            @for (it of selected(); track it.hexcode) {
+              <mat-option [value]="it.hexcode">
+                {{ it.labelResolved || it.labelOpenMoji || it.hexcode }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <button mat-stroked-button (click)="prevPreview()">◀ Précédent</button>
+        <button mat-stroked-button (click)="nextPreview()">Suivant ▶</button>
+      </div>
+
+      <div class="row">
+        <button mat-stroked-button (click)="setBg('white')">Fond blanc</button>
+        <button mat-stroked-button (click)="setBg('transparent')">Fond transparent</button>
+
+        <mat-form-field appearance="outline" class="w180">
+          <mat-label>Zoom</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.1"
+            min="0.2"
+            max="3"
+            [value]="zoom()"
+            (input)="setZoom($any($event.target).value)"
+          />
+        </mat-form-field>
+
+        <button mat-stroked-button (click)="zoom.set(1)">100%</button>
+      </div>
+
+      @if (mode() === 'A') {
+        <h3>Réglages Mode A</h3>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Largeur</mat-label>
+            <input matInput type="number" [value]="a().cardW" (input)="setNum('a.cardW',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hauteur</mat-label>
+            <input matInput type="number" [value]="a().cardH" (input)="setNum('a.cardH',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille emoji</mat-label>
+            <input matInput type="number" [value]="a().emojiSize" (input)="setNum('a.emojiSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille police</mat-label>
+            <input matInput type="number" [value]="a().fontSize" (input)="setNum('a.fontSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Espace emoji/texte</mat-label>
+            <input matInput type="number" [value]="a().gapEmojiText" (input)="setNum('a.gapEmojiText',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bordure (px)</mat-label>
+            <input matInput type="number" [value]="a().borderPx" (input)="setNum('a.borderPx',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rayon (px)</mat-label>
+            <input matInput type="number" [value]="a().radiusPx" (input)="setNum('a.radiusPx',$any($event.target).value)" />
+          </mat-form-field>
+        </div>
+      } @else {
+        <h3>Réglages Mode B</h3>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Emoji W</mat-label>
+            <input matInput type="number" [value]="b().emojiCardW" (input)="setNum('b.emojiCardW',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Emoji H</mat-label>
+            <input matInput type="number" [value]="b().emojiCardH" (input)="setNum('b.emojiCardH',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille emoji</mat-label>
+            <input matInput type="number" [value]="b().emojiSize" (input)="setNum('b.emojiSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Texte W</mat-label>
+            <input matInput type="number" [value]="b().textCardW" (input)="setNum('b.textCardW',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Texte H</mat-label>
+            <input matInput type="number" [value]="b().textCardH" (input)="setNum('b.textCardH',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille police</mat-label>
+            <input matInput type="number" [value]="b().fontSize" (input)="setNum('b.fontSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bordure (px)</mat-label>
+            <input matInput type="number" [value]="b().borderPx" (input)="setNum('b.borderPx',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rayon (px)</mat-label>
+            <input matInput type="number" [value]="b().radiusPx" (input)="setNum('b.radiusPx',$any($event.target).value)" />
+          </mat-form-field>
+        </div>
+      }
+
+      <h3>Planches</h3>
+
+      @if (mode() === 'B') {
+        <div class="row">
+          <button
+            mat-stroked-button
+            [class.active]="bSheetLayout() === 'mixed'"
+            (click)="setBSheetLayout('mixed')"
+          >Planches mixées</button>
+
+          <button
+            mat-stroked-button
+            [class.active]="bSheetLayout() === 'split'"
+            (click)="setBSheetLayout('split')"
+          >Planches séparées (emoji + mots)</button>
+        </div>
+      }
+
+      <div class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Colonnes</mat-label>
+          <input matInput type="number" min="1" max="50" [value]="sheet().cols" (input)="setNum('sheet.cols',$any($event.target).value)" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Rangées</mat-label>
+          <input matInput type="number" min="1" max="50" [value]="sheet().rows" (input)="setNum('sheet.rows',$any($event.target).value)" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Gap (px)</mat-label>
+          <input matInput type="number" min="0" [value]="sheet().gap" (input)="setNum('sheet.gap',$any($event.target).value)" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <button mat-raised-button (click)="exportCards()">Export — 1 PNG par carte</button>
+        <button mat-raised-button (click)="exportSheets()">Export — Planches PNG</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: WYSIWYG -->
+    <section class="panel previewPanel">
+      <!-- CARD PREVIEW -->
+      <div class="previewHeader">
+        <div class="title">Aperçu carte (WYSIWYG)</div>
+        <div class="meta">
+          <span>Export: <strong>{{ lastSize().w }}</strong>×<strong>{{ lastSize().h }}</strong> px</span>
+          <span class="dot">•</span>
+          <span>Zoom: <strong>{{ (zoom() * 100) | number:'1.0-0' }}</strong>%</span>
+          <span class="dot">•</span>
+          <span>BG: <strong>{{ (mode() === 'A' ? a().background : b().background) }}</strong></span>
+        </div>
+      </div>
+
+      <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+        <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+          <canvas #preview></canvas>
+        </div>
+      </div>
+
+      <p class="hint">
+        Ce canvas est le rendu exact d’une carte (mêmes dimensions, mêmes bordures, même texte).
+        Le damier sert juste à visualiser la transparence.
+      </p>
+
+      <hr class="sep" />
+
+      <!-- SHEETS PREVIEW -->
+      @if (mode() === 'B' && bSheetLayout() === 'split') {
+        <!-- EMOJI SHEET -->
+        <div class="previewHeader">
+          <div class="title">Aperçu planche — Emojis</div>
+          <div class="meta">
+            <span>Page: <strong>{{ sheetPageEmoji() }}</strong>/<strong>{{ sheetTotalEmoji() }}</strong></span>
+            <span class="dot">•</span>
+            <span>Export: <strong>{{ sheetLastSizeEmoji().w }}</strong>×<strong>{{ sheetLastSizeEmoji().h }}</strong> px</span>
+            <span class="dot">•</span>
+            <span>{{ sheet().cols }}×{{ sheet().rows }} • gap {{ sheet().gap }} px</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <button mat-stroked-button (click)="prevSheetEmoji()">◀ Page</button>
+
+          <mat-form-field appearance="outline" class="w180">
+            <mat-label>Page</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              [max]="sheetTotalEmoji()"
+              [value]="sheetPageEmoji()"
+              (input)="setSheetPageEmoji($any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <button mat-stroked-button (click)="nextSheetEmoji()">Page ▶</button>
+        </div>
+
+        <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+          <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+            <canvas #sheetPreviewEmoji></canvas>
+          </div>
+        </div>
+
+        <p class="hint">
+          Planche d’emojis uniquement (Mode B séparé). Le damier sert juste à visualiser la transparence.
+        </p>
+
+        <hr class="sep" />
+
+        <!-- TEXT SHEET -->
+        <div class="previewHeader">
+          <div class="title">Aperçu planche — Mots</div>
+          <div class="meta">
+            <span>Page: <strong>{{ sheetPageText() }}</strong>/<strong>{{ sheetTotalText() }}</strong></span>
+            <span class="dot">•</span>
+            <span>Export: <strong>{{ sheetLastSizeText().w }}</strong>×<strong>{{ sheetLastSizeText().h }}</strong> px</span>
+            <span class="dot">•</span>
+            <span>{{ sheet().cols }}×{{ sheet().rows }} • gap {{ sheet().gap }} px</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <button mat-stroked-button (click)="prevSheetText()">◀ Page</button>
+
+          <mat-form-field appearance="outline" class="w180">
+            <mat-label>Page</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              [max]="sheetTotalText()"
+              [value]="sheetPageText()"
+              (input)="setSheetPageText($any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <button mat-stroked-button (click)="nextSheetText()">Page ▶</button>
+        </div>
+
+        <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+          <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+            <canvas #sheetPreviewText></canvas>
+          </div>
+        </div>
+
+        <p class="hint">
+          Planche de mots uniquement (Mode B séparé). Le damier sert juste à visualiser la transparence.
+        </p>
+      } @else {
+        <!-- MIXED / MODE A SHEET -->
+        <div class="previewHeader">
+          <div class="title">Aperçu planche (WYSIWYG)</div>
+          <div class="meta">
+            <span>Page: <strong>{{ sheetPageAll() }}</strong>/<strong>{{ sheetTotalAll() }}</strong></span>
+            <span class="dot">•</span>
+            <span>Export: <strong>{{ sheetLastSizeAll().w }}</strong>×<strong>{{ sheetLastSizeAll().h }}</strong> px</span>
+            <span class="dot">•</span>
+            <span>{{ sheet().cols }}×{{ sheet().rows }} • gap {{ sheet().gap }} px</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <button mat-stroked-button (click)="prevSheetAll()">◀ Page</button>
+
+          <mat-form-field appearance="outline" class="w180">
+            <mat-label>Page</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              [max]="sheetTotalAll()"
+              [value]="sheetPageAll()"
+              (input)="setSheetPageAll($any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <button mat-stroked-button (click)="nextSheetAll()">Page ▶</button>
+        </div>
+
+        <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+          <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+            <canvas #sheetPreview></canvas>
+          </div>
+        </div>
+
+        <p class="hint">
+          Ce canvas est le rendu exact de l’export “Planches PNG”.
+          Le damier sert juste à visualiser la transparence.
+        </p>
+      }
+    </section>
+  </div>
+}

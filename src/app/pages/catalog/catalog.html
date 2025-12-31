@@ -1,0 +1,95 @@
+<div class="top">
+  <button mat-raised-button (click)="load()" [disabled]="loading()">
+    Recharger
+  </button>
+
+  <mat-slide-toggle
+    [checked]="store.includeExtrasUnicode()"
+    (change)="store.includeExtrasUnicode.set($event.checked)"
+  >
+    Inclure extras
+  </mat-slide-toggle>
+
+  <mat-slide-toggle
+    [checked]="store.enableEmojibaseFr()"
+    (change)="store.enableEmojibaseFr.set($event.checked)"
+  >
+    Emojibase FR
+  </mat-slide-toggle>
+
+  <mat-slide-toggle
+    [checked]="store.enableFlagIntl()"
+    (change)="store.enableFlagIntl.set($event.checked)"
+  >
+    Drapeaux (Intl)
+  </mat-slide-toggle>
+
+  <mat-form-field appearance="outline" class="search">
+    <mat-label>Recherche</mat-label>
+    <input
+      matInput
+      [value]="store.query()"
+      (input)="store.query.set(($any($event.target).value || ''))"
+      placeholder="hex, nom, tags..."
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="group">
+    <mat-label>Groupe</mat-label>
+    <mat-select [value]="store.groupFilter()" (selectionChange)="store.groupFilter.set($event.value)">
+      @for (g of store.groups(); track g) {
+        <mat-option [value]="g">{{ g }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+@if (error()) {
+  <p class="error">Erreur: {{ error() }}</p>
+}
+
+@if (loading()) {
+  <p class="hint">Chargement…</p>
+}
+
+@if (!store.items().length && !loading()) {
+  <p class="hint">Clique “Recharger”.</p>
+}
+
+<mat-accordion>
+  @for (entry of groups(); track entry[0]) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ entry[0] }}</mat-panel-title>
+        <mat-panel-description>
+          {{ entry[1].length }} visibles · {{ selectedCountByGroup().get(entry[0]) ?? 0 }} cochés
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="group-actions">
+        <button mat-stroked-button (click)="selectAllInGroup(entry[0])">Tout cocher</button>
+        <button mat-stroked-button (click)="deselectAllInGroup(entry[0])">Tout décocher</button>
+      </div>
+
+      <div class="grid">
+        @for (i of entry[1]; track i.hexcode) {
+          <div class="tile">
+            <mat-checkbox
+              [checked]="i.isSelected"
+              (change)="store.toggle(i.hexcode)"
+            >
+              <span class="label">{{ i.labelResolved || '(sans label)' }}</span>
+            </mat-checkbox>
+
+            <div class="meta">
+              <code>{{ i.hexcode }}</code>
+              <span class="tags">{{ i.subgroup }}</span>
+            </div>
+
+            <img class="svg" [src]="i.svgUrl" [alt]="i.labelResolved" loading="lazy" />
+          </div>
+        }
+      </div>
+    </mat-expansion-panel>
+  }
+</mat-accordion>

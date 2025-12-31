@@ -1,0 +1,3367 @@
+# Project concat
+# Base: C:\Users\malri\emoji-en-folie
+# Output: C:\Users\malri\emoji-en-folie\emoji-en-folie_dump.txt
+# Generated: 2025-12-31T13:13:26.069Z
+# Files: 39
+
+## TREE (included files)
+.gemini/
+  GEMINI.md
+src/
+  app/
+    core/
+      models/
+        emoji.models.ts
+      services/
+        emoji-catalog.spec.ts
+        emoji-catalog.ts
+        emoji-exporter.ts
+        label-resolver.spec.ts
+        label-resolver.ts
+        selection-store.spec.ts
+        selection-store.ts
+    pages/
+      catalog/
+        catalog.html
+        catalog.scss
+        catalog.spec.ts
+        catalog.ts
+      export/
+        export.html
+        export.scss
+        export.spec.ts
+        export.ts
+      selection/
+        selection.html
+        selection.scss
+        selection.spec.ts
+        selection.ts
+    app.config.ts
+    app.html
+    app.routes.ts
+    app.scss
+    app.spec.ts
+    app.ts
+  environments/
+    environment.ts
+  index.html
+  main.ts
+  styles.scss
+angular.json
+concat-projet.js
+firebase.json
+package.json
+README.md
+tsconfig.app.json
+tsconfig.json
+tsconfig.spec.json
+
+
+
+===== FILE: angular.json =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\angular.json
+
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "emoji-en-folie": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "emoji-en-folie:build:production"
+            },
+            "development": {
+              "buildTarget": "emoji-en-folie:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        }
+      }
+    }
+  }
+}
+
+
+===== FILE: firebase.json =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\firebase.json
+
+{
+  "hosting": {
+    "public": "dist/emoji-en-folie/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
+
+
+===== FILE: package.json =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\package.json
+
+{
+  "name": "emoji-en-folie",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "concat": "node concat-projet.js emoji-en-folie_dump.txt .",
+    "build": "ng build --configuration production",
+    "serve:hosting": "firebase emulators:start --only hosting",
+    "deploy": "npm run build && firebase deploy --only hosting"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@10.9.3",
+  "dependencies": {
+    "@angular/cdk": "^21.0.5",
+    "@angular/common": "^21.0.0",
+    "@angular/compiler": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/forms": "^21.0.0",
+    "@angular/material": "^21.0.5",
+    "@angular/platform-browser": "^21.0.0",
+    "@angular/router": "^21.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.0.4",
+    "@angular/cli": "^21.0.4",
+    "@angular/compiler-cli": "^21.0.0",
+    "jsdom": "^27.1.0",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}
+
+
+===== FILE: src/index.html =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\index.html
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>EmojiEnFolie</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+
+
+===== FILE: src/main.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\main.ts
+
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { AppComponent } from './app/app';
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+
+
+===== FILE: src/styles.scss =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\styles.scss
+
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+/* You can add global styles to this file, and also import other style files */
+
+
+===== FILE: tsconfig.app.json =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\tsconfig.app.json
+
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": []
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
+  ]
+}
+
+
+===== FILE: tsconfig.json =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\tsconfig.json
+
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve"
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}
+
+
+===== FILE: tsconfig.spec.json =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\tsconfig.spec.json
+
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": [
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.spec.ts"
+  ]
+}
+
+
+===== FILE: .gemini/GEMINI.md =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\.gemini\GEMINI.md
+
+
+You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
+
+## TypeScript Best Practices
+
+- Use strict type checking
+- Prefer type inference when the type is obvious
+- Avoid the `any` type; use `unknown` when type is uncertain
+
+## Angular Best Practices
+
+- Always use standalone components over NgModules
+- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
+- Use signals for state management
+- Implement lazy loading for feature routes
+- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
+- Use `NgOptimizedImage` for all static images.
+  - `NgOptimizedImage` does not work for inline base64 images.
+
+## Accessibility Requirements
+
+- It MUST pass all AXE checks.
+- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+
+### Components
+
+- Keep components small and focused on a single responsibility
+- Use `input()` and `output()` functions instead of decorators
+- Use `computed()` for derived state
+- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
+- Prefer inline templates for small components
+- Prefer Reactive forms instead of Template-driven ones
+- Do NOT use `ngClass`, use `class` bindings instead
+- Do NOT use `ngStyle`, use `style` bindings instead
+- When using external templates/styles, use paths relative to the component TS file.
+
+## State Management
+
+- Use signals for local component state
+- Use `computed()` for derived state
+- Keep state transformations pure and predictable
+- Do NOT use `mutate` on signals, use `update` or `set` instead
+
+## Templates
+
+- Keep templates simple and avoid complex logic
+- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
+- Use the async pipe to handle observables
+- Do not assume globals like (`new Date()`) are available.
+- Do not write arrow functions in templates (they are not supported).
+
+## Services
+
+- Design services around a single responsibility
+- Use the `providedIn: 'root'` option for singleton services
+- Use the `inject()` function instead of constructor injection
+
+
+===== FILE: concat-projet.js =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\concat-projet.js
+
+#!/usr/bin/env node
+/* concat-projet.js
+ * Usage:
+ *   node concat-projet.js out.txt .
+ *   node concat-projet.js out.txt C:\path\to\project
+ */
+
+const fs = require("fs");
+const path = require("path");
+
+const outName = process.argv[2] || "project_dump.txt";
+const baseDir = process.argv[3] || ".";
+
+const MAX_FILE_SIZE_BYTES = 800_000;
+
+const IGNORE_DIRS = new Set([
+  "node_modules",
+  ".angular",
+  "dist",
+  ".git",
+  ".firebase",
+  "coverage",
+  ".vscode",
+]);
+
+const IGNORE_FILES = new Set([
+  "package-lock.json", // trop gros
+  "yarn.lock",
+  "pnpm-lock.yaml",
+  outName,
+]);
+
+const IMPORTANT_EXACT_FILES = new Set([
+  "package.json",
+  "firebase.json",
+  "angular.json",
+  "tsconfig.json",
+  "tsconfig.app.json",
+  "tsconfig.spec.json",
+  "src/main.ts",
+  "src/index.html",
+  "src/styles.scss",
+]);
+
+const ALLOWED_EXT = new Set([
+  ".ts",
+  ".tsx",
+  ".js",
+  ".mjs",
+  ".cjs",
+  ".json",
+  ".html",
+  ".scss",
+  ".css",
+  ".md",
+  ".txt",
+  ".yml",
+  ".yaml",
+]);
+
+function normalizeSlashes(p) {
+  return p.split(path.sep).join("/");
+}
+
+function shouldIncludeFile(filePath, rel) {
+  const name = path.basename(filePath);
+  if (IGNORE_FILES.has(name)) return false;
+
+  // whitelist exact importants, même sans extension “classique”
+  const relNorm = normalizeSlashes(rel);
+  if (IMPORTANT_EXACT_FILES.has(relNorm) || IMPORTANT_EXACT_FILES.has(name)) return true;
+
+  const ext = path.extname(name).toLowerCase();
+  if (!ALLOWED_EXT.has(ext)) return false;
+
+  return true;
+}
+
+function walk(dirAbs, outFiles, baseAbs) {
+  const entries = fs.readdirSync(dirAbs, { withFileTypes: true });
+  for (const e of entries) {
+    const abs = path.join(dirAbs, e.name);
+    const rel = path.relative(baseAbs, abs);
+
+    if (e.isDirectory()) {
+      if (IGNORE_DIRS.has(e.name)) continue;
+      walk(abs, outFiles, baseAbs);
+      continue;
+    }
+
+    if (!e.isFile()) continue;
+    if (!shouldIncludeFile(abs, rel)) continue;
+
+    outFiles.push(abs);
+  }
+}
+
+function safeRead(filePath) {
+  const stat = fs.statSync(filePath);
+  if (stat.size > MAX_FILE_SIZE_BYTES) {
+    return `/* SKIPPED: file too large (${stat.size} bytes) */\n`;
+  }
+
+  const buf = fs.readFileSync(filePath);
+
+  // Heuristique binaire
+  for (let i = 0; i < buf.length; i += Math.max(1, Math.floor(buf.length / 50))) {
+    if (buf[i] === 0) return `/* SKIPPED: looks binary */\n`;
+  }
+
+  return buf.toString("utf8");
+}
+
+/**
+ * Construit une arborescence (tree) à partir d’une liste de chemins relatifs.
+ * Exemple de rendu:
+ *   src/
+ *     app/
+ *       app.component.ts
+ *     main.ts
+ */
+function buildTreeFromRelPaths(relPaths) {
+  const root = { children: new Map(), isFile: false };
+
+  for (const rel of relPaths) {
+    const parts = rel.split("/").filter(Boolean);
+    let node = root;
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      const isLast = i === parts.length - 1;
+
+      if (!node.children.has(part)) {
+        node.children.set(part, { children: new Map(), isFile: false });
+      }
+      node = node.children.get(part);
+      if (isLast) node.isFile = true;
+    }
+  }
+
+  function sortKeys(map) {
+    return Array.from(map.keys()).sort((a, b) => a.localeCompare(b));
+  }
+
+  function render(node, prefix = "") {
+    const lines = [];
+    const keys = sortKeys(node.children);
+
+    // Dossiers avant fichiers (simple heuristique: "a/" si a a des enfants)
+    keys.sort((a, b) => {
+      const na = node.children.get(a);
+      const nb = node.children.get(b);
+      const da = na.children.size > 0;
+      const db = nb.children.size > 0;
+      if (da !== db) return da ? -1 : 1;
+      return a.localeCompare(b);
+    });
+
+    for (const key of keys) {
+      const child = node.children.get(key);
+      const isDir = child.children.size > 0;
+      lines.push(`${prefix}${key}${isDir ? "/" : ""}`);
+      if (isDir) lines.push(...render(child, prefix + "  "));
+    }
+    return lines;
+  }
+
+  return render(root).join("\n") + "\n";
+}
+
+function main() {
+  const absBase = path.resolve(baseDir);
+  const absOut = path.resolve(outName);
+
+  const files = [];
+  walk(absBase, files, absBase);
+
+  // rootFirst = certains fichiers importants en tête
+  const rootFirst = [];
+  const rest = [];
+
+  for (const f of files) {
+    const rel = path.relative(absBase, f);
+    const relNorm = normalizeSlashes(rel);
+    const name = path.basename(f);
+    const isRoot = !rel.includes(path.sep);
+
+    if (isRoot && IMPORTANT_EXACT_FILES.has(name)) rootFirst.push(f);
+    else if (IMPORTANT_EXACT_FILES.has(relNorm)) rootFirst.push(f);
+    else rest.push(f);
+  }
+
+  rootFirst.sort((a, b) => normalizeSlashes(a).localeCompare(normalizeSlashes(b)));
+  rest.sort((a, b) => normalizeSlashes(a).localeCompare(normalizeSlashes(b)));
+
+  const ordered = [...rootFirst, ...rest];
+
+  const relPaths = ordered.map(f => normalizeSlashes(path.relative(absBase, f)));
+
+  const parts = [];
+  parts.push(
+    `# Project concat\n` +
+    `# Base: ${absBase}\n` +
+    `# Output: ${absOut}\n` +
+    `# Generated: ${new Date().toISOString()}\n` +
+    `# Files: ${ordered.length}\n\n`
+  );
+
+  // ✅ Arborescence au début
+  parts.push(`## TREE (included files)\n`);
+  parts.push(buildTreeFromRelPaths(relPaths));
+  parts.push(`\n`);
+
+  for (const filePath of ordered) {
+    const rel = normalizeSlashes(path.relative(absBase, filePath));
+    const abs = path.resolve(filePath);
+
+    // ✅ Ajoute chemin absolu dans le header
+    parts.push(`\n\n===== FILE: ${rel} =====\n`);
+    parts.push(`// ABSOLUTE: ${abs}\n\n`);
+    parts.push(safeRead(filePath));
+    if (!parts[parts.length - 1].endsWith("\n")) parts.push("\n");
+  }
+
+  fs.writeFileSync(absOut, parts.join(""), "utf8");
+  console.log(`OK -> ${absOut} (${ordered.length} files)`);
+}
+
+main();
+
+
+===== FILE: README.md =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\README.md
+
+# EmojiEnFolie
+
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+
+## Development server
+
+To start a local development server, run:
+
+```bash
+ng serve
+```
+
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+## Code scaffolding
+
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+
+```bash
+ng generate component component-name
+```
+
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+
+```bash
+ng generate --help
+```
+
+## Building
+
+To build the project run:
+
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Running unit tests
+
+To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+===== FILE: src/app/app.config.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\app.config.ts
+
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes)
+  ]
+};
+
+
+===== FILE: src/app/app.html =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\app.html
+
+<mat-toolbar>
+  <span>Emoji en folie</span>
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/catalog" routerLinkActive="active">Catalogue</a>
+
+  <a
+    mat-button
+    routerLink="/selection"
+    routerLinkActive="active"
+    [matBadge]="selectedCount()"
+    matBadgeOverlap="false"
+    matBadgeHidden="false"
+  >
+    Sélection
+  </a>
+
+  <a mat-button routerLink="/export" routerLinkActive="active">Export</a>
+</mat-toolbar>
+
+<div class="page">
+  <router-outlet />
+</div>
+
+
+===== FILE: src/app/app.routes.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\app.routes.ts
+
+import { Routes } from '@angular/router';
+import { CatalogComponent } from './pages/catalog/catalog';
+import { ExportComponent } from './pages/export/export';
+import { SelectionComponent } from './pages/selection/selection';
+
+
+export const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'catalog' },
+  { path: 'catalog', component: CatalogComponent },
+  { path: 'selection', component: SelectionComponent },
+  { path: 'export', component: ExportComponent },
+  { path: '**', redirectTo: 'catalog' },
+];
+
+
+===== FILE: src/app/app.scss =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\app.scss
+
+
+
+
+===== FILE: src/app/app.spec.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\app.spec.ts
+
+// src/app/app.spec.ts
+
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+
+import { AppComponent } from './app';
+
+describe('AppComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AppComponent],
+      providers: [
+        provideRouter([]),
+        provideNoopAnimations(),
+      ],
+    }).compileComponents();
+  });
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  it('should render toolbar title', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const title = compiled.querySelector('mat-toolbar span')?.textContent ?? '';
+    expect(title).toContain('Emoji en folie');
+  });
+});
+
+
+===== FILE: src/app/app.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\app.ts
+
+import { Component, computed, inject } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
+import { SelectionStoreService } from './core/services/selection-store';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule, MatBadgeModule],
+  templateUrl: './app.html',
+  styleUrl: './app.scss',
+})
+export class AppComponent {
+  private readonly store = inject(SelectionStoreService);
+  readonly selectedCount = computed(() => this.store.selected().length);
+}
+
+
+===== FILE: src/app/core/models/emoji.models.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\models\emoji.models.ts
+
+export interface OpenMojiEmoji {
+  hexcode: string;
+  annotation: string;
+  group?: string;
+  subgroups?: string[];
+  tags?: string[];
+  emoji?: string; // selon le JSON
+}
+export interface EmojibaseCompactEntry {
+  hexcode?: string;     // "1F384" ou "1F1E8-1F1E6"
+  unicode?: string;     // "🎄" (peut contenir FE0F)
+  label?: string;       // libellé localisé (FR)
+  // compat si tu switches sur data.json ou une vieille version:
+  annotation?: string;
+  emoji?: string;
+  tags?: string[];
+}
+
+export interface EmojiItem {
+  hexcode: string;
+  emojiChar?: string;
+  svgUrl: string;
+
+  group: string;
+  subgroup: string;
+  tags: string[];
+
+  labelOpenMoji: string;
+  labelFrAuto?: string;
+  labelOverride?: string;
+  labelResolved: string;
+
+  isSelected: boolean;
+  isExtrasUnicode: boolean;
+}
+
+
+
+===== FILE: src/app/core/services/emoji-catalog.spec.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\services\emoji-catalog.spec.ts
+
+import { TestBed } from '@angular/core/testing';
+
+import { EmojiCatalog } from './emoji-catalog';
+
+describe('EmojiCatalog', () => {
+  let service: EmojiCatalog;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(EmojiCatalog);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});
+
+
+===== FILE: src/app/core/services/emoji-catalog.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\services\emoji-catalog.ts
+
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import type { EmojibaseCompactEntry, EmojiItem, OpenMojiEmoji } from '../models/emoji.models';
+
+@Injectable({ providedIn: 'root' })
+export class EmojiCatalogService {
+  private openMojiCache?: OpenMojiEmoji[];
+  private emojibaseCache?: Map<string, string>;
+
+  async loadOpenMoji(): Promise<OpenMojiEmoji[]> {
+    if (this.openMojiCache) return this.openMojiCache;
+    const res = await fetch(environment.openMojiJsonUrl);
+    if (!res.ok) throw new Error(`OpenMoji JSON fetch failed: ${res.status}`);
+    const json = await res.json();
+    this.openMojiCache = Array.isArray(json) ? json : [];
+    return this.openMojiCache;
+  }
+
+  async loadEmojibaseFr(): Promise<Map<string, string>> {
+    if (this.emojibaseCache) return this.emojibaseCache;
+
+    const res = await fetch(environment.emojibaseFrUrl);
+    if (!res.ok) throw new Error(`Emojibase FR fetch failed: ${res.status}`);
+
+    const arr = (await res.json()) as EmojibaseCompactEntry[];
+    const map = new Map<string, string>();
+
+    for (const e of arr ?? []) {
+      const label = (e?.label ?? e?.annotation ?? '').trim();
+      if (!label) continue;
+
+      const hex = (e?.hexcode ?? '').trim().toUpperCase();
+      if (hex) map.set(hex, label);
+
+      const uni = (e?.unicode ?? e?.emoji ?? '').trim();
+      if (uni) {
+        map.set(uni, label);
+        // bonus: enlève VS16 (FE0F) pour matcher plus souvent
+        map.set(uni.replace(/\uFE0F/g, ''), label);
+      }
+    }
+
+    this.emojibaseCache = map;
+    return map;
+  }
+
+  async buildItems(opts: { includeExtrasUnicode: boolean; enableEmojibaseFr: boolean; }): Promise<EmojiItem[]> {
+    const [openmoji, frMap] = await Promise.all([
+      this.loadOpenMoji(),
+      opts.enableEmojibaseFr ? this.loadEmojibaseFr() : Promise.resolve(new Map<string, string>()),
+    ]);
+
+    const items: EmojiItem[] = [];
+
+    for (const e of openmoji) {
+      const group = (e.group ?? 'Autres').trim() || 'Autres';
+      const subgroup = (Array.isArray(e.subgroups) && e.subgroups[0] ? String(e.subgroups[0]) : 'Divers').trim() || 'Divers';
+
+      const isExtras = group.toLowerCase().includes('extras');
+      if (!opts.includeExtrasUnicode && isExtras) continue;
+
+      const hex = (e.hexcode ?? '').toUpperCase();
+      const emojiChar = e.emoji;
+
+      const emojiNoVS16 = emojiChar ? emojiChar.replace(/\uFE0F/g, '') : undefined;
+
+      const frLabel = opts.enableEmojibaseFr
+        ? (frMap.get(hex) ??
+          (emojiChar ? frMap.get(emojiChar) : undefined) ??
+          (emojiNoVS16 ? frMap.get(emojiNoVS16) : undefined))
+        : undefined;
+
+      items.push({
+        hexcode: hex,
+        emojiChar,
+        svgUrl: `${environment.openMojiSvgBaseUrl}${hex}.svg`,
+        group,
+        subgroup,
+        tags: [...(e.tags ?? [])].map(String),
+
+        labelOpenMoji: e.annotation ?? '',
+        labelFrAuto: frLabel,
+        labelOverride: undefined,
+        labelResolved: '',
+
+        isSelected: false,
+        isExtrasUnicode: isExtras,
+      });
+    }
+
+    return items;
+  }
+}
+
+
+===== FILE: src/app/core/services/emoji-exporter.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\services\emoji-exporter.ts
+
+import { Injectable } from '@angular/core';
+import type { EmojiItem } from '../models/emoji.models';
+
+export type CardMode = 'A' | 'B';
+export type SheetVariant = 'all' | 'emoji' | 'text';
+
+export interface CommonCardStyle {
+  borderPx: number;
+  radiusPx: number;
+  background: 'white' | 'transparent';
+}
+
+export interface ModeASettings extends CommonCardStyle {
+  cardW: number;
+  cardH: number;
+  emojiSize: number;
+  fontSize: number;
+  gapEmojiText: number;
+}
+
+export interface ModeBSettings extends CommonCardStyle {
+  emojiCardW: number;
+  emojiCardH: number;
+  emojiSize: number;
+
+  textCardW: number;
+  textCardH: number;
+  fontSize: number;
+}
+
+export interface SheetSettings {
+  cols: number;
+  gap: number; // px
+  rows: number;
+}
+
+type Tile = {
+  w: number;
+  h: number;
+  filenameHint: string;
+  draw: (ctx: CanvasRenderingContext2D) => Promise<void>;
+};
+
+@Injectable({ providedIn: 'root' })
+export class EmojiExporterService {
+  private readonly svgCache = new Map<string, Promise<HTMLImageElement>>();
+
+  private svgUrlToImage(svgUrl: string): Promise<HTMLImageElement> {
+    const hit = this.svgCache.get(svgUrl);
+    if (hit) return hit;
+
+    const p = (async () => {
+      const res = await fetch(svgUrl);
+      if (!res.ok) throw new Error(`SVG fetch failed: ${res.status}`);
+      const svgText = await res.text();
+
+      const blob = new Blob([svgText], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+
+      try {
+        const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+          const i = new Image();
+          i.onload = () => resolve(i);
+          i.onerror = () => reject(new Error('SVG image load failed'));
+          i.src = url;
+        });
+        return img;
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    })();
+
+    this.svgCache.set(svgUrl, p);
+    p.catch(() => this.svgCache.delete(svgUrl));
+    return p;
+  }
+
+  private roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+    const rr = Math.max(0, Math.min(r, Math.min(w, h) / 2));
+    // @ts-ignore
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      // @ts-ignore
+      ctx.roundRect(x, y, w, h, rr);
+      return;
+    }
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+  }
+
+  private drawCardBase(ctx: CanvasRenderingContext2D, w: number, h: number, style: CommonCardStyle) {
+    ctx.clearRect(0, 0, w, h);
+
+    if (style.background === 'white') {
+      ctx.fillStyle = '#ffffff';
+      this.roundRect(ctx, 0, 0, w, h, style.radiusPx);
+      ctx.fill();
+    }
+
+    ctx.lineWidth = style.borderPx;
+    ctx.strokeStyle = '#000000';
+    this.roundRect(ctx, style.borderPx / 2, style.borderPx / 2, w - style.borderPx, h - style.borderPx, style.radiusPx);
+    ctx.stroke();
+  }
+
+  private fitText(ctx: CanvasRenderingContext2D, text: string, maxW: number): string {
+    const clean = (text ?? '').trim();
+    if (!clean) return '';
+    if (ctx.measureText(clean).width <= maxW) return clean;
+
+    const ell = '…';
+    let lo = 0;
+    let hi = clean.length;
+    while (lo < hi) {
+      const mid = Math.ceil((lo + hi) / 2);
+      const candidate = clean.slice(0, mid) + ell;
+      if (ctx.measureText(candidate).width <= maxW) lo = mid;
+      else hi = mid - 1;
+    }
+    return clean.slice(0, lo) + ell;
+  }
+
+  private sanitizeFilenamePart(s: string): string {
+    return (s ?? '')
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\/\\?%*:|"<>]/g, '')
+      .replace(/\s+/g, '_')
+      .slice(0, 80);
+  }
+
+  private async renderTileToDataUrl(tile: Tile): Promise<string> {
+    const canvas = document.createElement('canvas');
+    canvas.width = tile.w;
+    canvas.height = tile.h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas context unavailable');
+    await tile.draw(ctx);
+    return canvas.toDataURL('image/png');
+  }
+
+  private downloadDataUrl(dataUrl: string, filename: string) {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    a.click();
+  }
+
+  // ===== NEW: petites usines de Tile (pour éviter de dupliquer du code) =====
+
+  private makeTileA(it: EmojiItem, a: ModeASettings, idx: number, safeLabel: string, safeHex: string): Tile {
+    return {
+      w: a.cardW,
+      h: a.cardH,
+      filenameHint: `${String(idx).padStart(3, '0')}_${safeLabel}_${safeHex}.png`,
+      draw: async (ctx) => {
+        this.drawCardBase(ctx, a.cardW, a.cardH, a);
+
+        const img = await this.svgUrlToImage(it.svgUrl);
+        const cx = a.cardW / 2;
+        const top = a.borderPx + 8;
+
+        const es = a.emojiSize;
+        ctx.drawImage(img, cx - es / 2, top, es, es);
+
+        ctx.fillStyle = '#000000';
+        ctx.font = `700 ${a.fontSize}px Roboto, Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        const maxW = a.cardW - (a.borderPx + 12) * 2;
+        const text = this.fitText(ctx, it.labelResolved || '', maxW);
+        ctx.fillText(text, cx, top + es + a.gapEmojiText);
+      }
+    };
+  }
+
+  private makeEmojiTileB(it: EmojiItem, b: ModeBSettings, idx: number, safeLabel: string, safeHex: string): Tile {
+    return {
+      w: b.emojiCardW,
+      h: b.emojiCardH,
+      filenameHint: `${String(idx).padStart(3, '0')}_${safeLabel}_${safeHex}_emoji.png`,
+      draw: async (ctx) => {
+        this.drawCardBase(ctx, b.emojiCardW, b.emojiCardH, b);
+        const img = await this.svgUrlToImage(it.svgUrl);
+        const es = b.emojiSize;
+        ctx.drawImage(img, (b.emojiCardW - es) / 2, (b.emojiCardH - es) / 2, es, es);
+      }
+    };
+  }
+
+  private makeTextTileB(it: EmojiItem, b: ModeBSettings, idx: number, safeLabel: string, safeHex: string): Tile {
+    return {
+      w: b.textCardW,
+      h: b.textCardH,
+      filenameHint: `${String(idx).padStart(3, '0')}_${safeLabel}_${safeHex}_texte.png`,
+      draw: async (ctx) => {
+        this.drawCardBase(ctx, b.textCardW, b.textCardH, b);
+        ctx.fillStyle = '#000000';
+        ctx.font = `700 ${b.fontSize}px Roboto, Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const maxW = b.textCardW - (b.borderPx + 12) * 2;
+        const text = this.fitText(ctx, it.labelResolved || '', maxW);
+        ctx.fillText(text, b.textCardW / 2, b.textCardH / 2);
+      }
+    };
+  }
+
+  /**
+   * NEW: variant pour les planches en mode B
+   * - mode A: variant ignoré
+   * - mode B + 'all'  : [emoji, texte] pour chaque item (comportement actuel)
+   * - mode B + 'emoji': uniquement les tuiles emoji
+   * - mode B + 'text' : uniquement les tuiles texte
+   */
+  private makeTiles(
+    mode: CardMode,
+    items: EmojiItem[],
+    a: ModeASettings,
+    b: ModeBSettings,
+    variant: SheetVariant = 'all'
+  ): Tile[] {
+    const tiles: Tile[] = [];
+    let idx = 1;
+
+    for (const it of items) {
+      const safeLabel = this.sanitizeFilenamePart(it.labelResolved || 'emoji');
+      const safeHex = this.sanitizeFilenamePart(it.hexcode);
+
+      if (mode === 'A') {
+        tiles.push(this.makeTileA(it, a, idx, safeLabel, safeHex));
+        idx++;
+        continue;
+      }
+
+      // mode B
+      if (variant === 'emoji') {
+        tiles.push(this.makeEmojiTileB(it, b, idx, safeLabel, safeHex));
+      } else if (variant === 'text') {
+        tiles.push(this.makeTextTileB(it, b, idx, safeLabel, safeHex));
+      } else {
+        // 'all' (mixé): emoji puis texte
+        tiles.push(this.makeEmojiTileB(it, b, idx, safeLabel, safeHex));
+        tiles.push(this.makeTextTileB(it, b, idx, safeLabel, safeHex));
+      }
+
+      idx++;
+    }
+
+    return tiles;
+  }
+
+  // PREVIEW: render the first tile for one item on a given canvas
+  async renderPreview(canvas: HTMLCanvasElement, mode: CardMode, item: EmojiItem, a: ModeASettings, b: ModeBSettings) {
+    // preview carte: on garde le comportement actuel (mode B => emoji)
+    const tiles = this.makeTiles(mode, [item], a, b, 'all');
+    const t = tiles[0];
+    canvas.width = t.w;
+    canvas.height = t.h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas context unavailable');
+    await t.draw(ctx);
+  }
+
+  async exportOnePngPerCard(mode: CardMode, items: EmojiItem[], a: ModeASettings, b: ModeBSettings) {
+    const tiles = this.makeTiles(mode, items, a, b, 'all');
+    for (const t of tiles) {
+      const dataUrl = await this.renderTileToDataUrl(t);
+      this.downloadDataUrl(dataUrl, t.filenameHint);
+    }
+  }
+
+  /**
+   * NEW: exportSheets accepte variant + prefix
+   * - variant 'all'  => mixé (par défaut)
+   * - variant 'emoji'=> planches d'emojis
+   * - variant 'text' => planches de mots
+   */
+  async exportSheets(
+    mode: CardMode,
+    items: EmojiItem[],
+    a: ModeASettings,
+    b: ModeBSettings,
+    sheet: SheetSettings,
+    variant: SheetVariant = 'all',
+    filenamePrefix?: string
+  ) {
+    const tiles = this.makeTiles(mode, items, a, b, variant);
+
+    const MAX_DIM = 50;
+    const cols = Math.max(1, Math.min(MAX_DIM, Math.floor(sheet.cols)));
+    const rowsLimit = Math.max(1, Math.min(MAX_DIM, Math.floor(sheet.rows)));
+    const gap = Math.max(0, Math.floor(sheet.gap));
+
+    const maxPerSheet = cols * rowsLimit;
+    const totalSheets = Math.max(1, Math.ceil(tiles.length / maxPerSheet));
+
+    const prefix =
+      filenamePrefix ??
+      (variant === 'emoji' ? 'planche_emojis' : variant === 'text' ? 'planche_mots' : 'planche');
+
+    for (let s = 0; s < totalSheets; s++) {
+      const slice = tiles.slice(s * maxPerSheet, (s + 1) * maxPerSheet);
+
+      const canvas = document.createElement('canvas');
+      await this.renderSheetIntoCanvas(canvas, slice, cols, rowsLimit, gap);
+
+      const out = canvas.toDataURL('image/png');
+      const filename = `${prefix}_${String(s + 1).padStart(2, '0')}_sur_${String(totalSheets).padStart(2, '0')}.png`;
+
+      this.downloadDataUrl(out, filename);
+    }
+  }
+
+  private computeSheetLayout(slice: Tile[], cols: number, rowsLimit: number, gap: number) {
+    const maxPerSheet = cols * rowsLimit;
+    const used = slice.slice(0, maxPerSheet);
+    const rows = Math.min(rowsLimit, Math.max(1, Math.ceil(used.length / cols)));
+
+    const colW = Array.from({ length: cols }, () => 0);
+    const rowH = Array.from({ length: rows }, () => 0);
+
+    for (let k = 0; k < used.length; k++) {
+      const r = Math.floor(k / cols);
+      const c = k % cols;
+      colW[c] = Math.max(colW[c], used[k].w);
+      rowH[r] = Math.max(rowH[r], used[k].h);
+    }
+
+    const sheetW = colW.reduce((acc, x) => acc + x, 0) + gap * (cols - 1);
+    const sheetH = rowH.reduce((acc, x) => acc + x, 0) + gap * (rows - 1);
+
+    const xOff: number[] = [];
+    const yOff: number[] = [];
+    let acc = 0;
+
+    for (let c = 0; c < cols; c++) {
+      xOff[c] = acc;
+      acc += colW[c] + gap;
+    }
+
+    acc = 0;
+    for (let r = 0; r < rows; r++) {
+      yOff[r] = acc;
+      acc += rowH[r] + gap;
+    }
+
+    return { used, rows, colW, rowH, xOff, yOff, sheetW, sheetH };
+  }
+
+  private async renderSheetIntoCanvas(canvas: HTMLCanvasElement, slice: Tile[], cols: number, rowsLimit: number, gap: number) {
+    const { used, colW, rowH, xOff, yOff, sheetW, sheetH } = this.computeSheetLayout(slice, cols, rowsLimit, gap);
+
+    canvas.width = Math.max(1, Math.ceil(sheetW));
+    canvas.height = Math.max(1, Math.ceil(sheetH));
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas context unavailable');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let k = 0; k < used.length; k++) {
+      const r = Math.floor(k / cols);
+      const c = k % cols;
+      const t = used[k];
+
+      const dx = xOff[c] + (colW[c] - t.w) / 2;
+      const dy = yOff[r] + (rowH[r] - t.h) / 2;
+
+      ctx.save();
+      ctx.translate(dx, dy);
+      await t.draw(ctx);
+      ctx.restore();
+    }
+  }
+
+  /**
+   * NEW: renderSheetPreview accepte variant
+   */
+  async renderSheetPreview(
+    canvas: HTMLCanvasElement,
+    mode: CardMode,
+    items: EmojiItem[],
+    a: ModeASettings,
+    b: ModeBSettings,
+    sheet: SheetSettings,
+    sheetIndexZeroBased: number,
+    variant: SheetVariant = 'all'
+  ): Promise<{ totalSheets: number }> {
+    const tiles = this.makeTiles(mode, items, a, b, variant);
+
+    const MAX_DIM = 50;
+    const cols = Math.max(1, Math.min(MAX_DIM, Math.floor(sheet.cols)));
+    const rowsLimit = Math.max(1, Math.min(MAX_DIM, Math.floor(sheet.rows)));
+    const gap = Math.max(0, Math.floor(sheet.gap));
+
+    const maxPerSheet = cols * rowsLimit;
+    const totalSheets = Math.max(1, Math.ceil(tiles.length / maxPerSheet));
+
+    const s = Math.max(0, Math.min(totalSheets - 1, Math.floor(sheetIndexZeroBased)));
+    const slice = tiles.slice(s * maxPerSheet, (s + 1) * maxPerSheet);
+
+    await this.renderSheetIntoCanvas(canvas, slice, cols, rowsLimit, gap);
+
+    return { totalSheets };
+  }
+}
+
+
+===== FILE: src/app/core/services/label-resolver.spec.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\services\label-resolver.spec.ts
+
+import { TestBed } from '@angular/core/testing';
+
+import { LabelResolver } from './label-resolver';
+
+describe('LabelResolver', () => {
+  let service: LabelResolver;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(LabelResolver);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});
+
+
+===== FILE: src/app/core/services/label-resolver.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\services\label-resolver.ts
+
+import { Injectable } from '@angular/core';
+import type { EmojiItem } from '../models/emoji.models';
+
+@Injectable({ providedIn: 'root' })
+export class LabelResolverService {
+  private readonly displayNamesFr = new Intl.DisplayNames('fr', { type: 'region' });
+
+  resolve(item: EmojiItem, opts: { enableEmojibaseFr: boolean; enableFlagIntl: boolean; }): string {
+    const raw =
+      (item.labelOverride && item.labelOverride.trim()) ||
+      (opts.enableEmojibaseFr && item.labelFrAuto?.trim()) ||
+      (opts.enableFlagIntl ? this.flagLabelIfAny(item) : '') ||
+      (item.labelOpenMoji?.trim()) ||
+      '';
+
+    return this.formatLabel(raw, item);
+  }
+
+  private formatLabel(input: string, item: EmojiItem): string {
+    let s = input.trim();
+
+    // guillemets doubles -> simples
+    s = s.replace(/["“”]/g, "'");
+
+    // cas drapeaux: enlever préfixes
+    s = s.replace(/^(flag|drapeau)\s*[:\-–—]\s*/i, '');
+
+    // Trim encore
+    s = s.trim();
+
+    if (!s) return '';
+
+    // Première lettre majuscule
+    s = s[0].toUpperCase() + s.slice(1);
+
+    return s;
+  }
+
+  private flagLabelIfAny(item: EmojiItem): string {
+    // Hexcode du style "1F1E8-1F1E6" (Canada)
+    const parts = item.hexcode.split('-');
+    if (parts.length !== 2) return '';
+    const cps = parts.map(p => parseInt(p, 16));
+    if (cps.some(cp => !(cp >= 0x1F1E6 && cp <= 0x1F1FF))) return '';
+
+    const cc = cps
+      .map(cp => String.fromCharCode(0x41 + (cp - 0x1F1E6)))
+      .join('');
+
+    try {
+      return this.displayNamesFr.of(cc) || '';
+    } catch {
+      return '';
+    }
+  }
+}
+
+
+===== FILE: src/app/core/services/selection-store.spec.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\services\selection-store.spec.ts
+
+import { TestBed } from '@angular/core/testing';
+
+import { SelectionStore } from './selection-store';
+
+describe('SelectionStore', () => {
+  let service: SelectionStore;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(SelectionStore);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});
+
+
+===== FILE: src/app/core/services/selection-store.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\core\services\selection-store.ts
+
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { EmojiItem } from '../models/emoji.models';
+import { LabelResolverService } from './label-resolver';
+
+type PersistV1 = {
+  v: 1;
+  toggles: {
+    includeExtrasUnicode: boolean;
+    enableEmojibaseFr: boolean;
+    enableFlagIntl: boolean;
+  };
+  selectedHexes: string[];
+  overrides: Record<string, string>; // HEX -> label
+};
+
+const LS_KEY = 'emoji-en-folie:persist:v1';
+
+@Injectable({ providedIn: 'root' })
+export class SelectionStoreService {
+  private readonly resolver = inject(LabelResolverService);
+
+  // UI state
+  readonly query = signal('');
+  readonly groupFilter = signal<string>('Tous');
+
+  // feature toggles
+  readonly includeExtrasUnicode = signal(false);
+  readonly enableEmojibaseFr = signal(true);
+  readonly enableFlagIntl = signal(true);
+
+  // persisted maps
+  private readonly _selectedHexes = signal<string[]>([]);
+  private readonly _overrides = signal<Record<string, string>>({});
+
+  // catalog items
+  private readonly _items = signal<EmojiItem[]>([]);
+  readonly activeHexcode = signal<string | null>(null);
+
+  // items with resolved labels
+  readonly items = computed(() => {
+    const sel = new Set(this._selectedHexes().map(h => h.toUpperCase()));
+    const ov = this._overrides();
+    const opts = {
+      enableEmojibaseFr: this.enableEmojibaseFr(),
+      enableFlagIntl: this.enableFlagIntl(),
+    };
+
+    return this._items().map(i => {
+      const hex = i.hexcode.toUpperCase();
+      const labelOverride = ov[hex] ?? i.labelOverride ?? '';
+      const patched: EmojiItem = {
+        ...i,
+        hexcode: hex,
+        isSelected: sel.has(hex),
+        labelOverride,
+        labelResolved: this.resolver.resolve(
+          { ...i, hexcode: hex, labelOverride },
+          opts
+        ),
+      };
+      return patched;
+    });
+  });
+
+  readonly selected = computed(() => this.items().filter(x => x.isSelected));
+
+  readonly groups = computed(() => {
+    const set = new Set(this.items().map(i => i.group));
+    return ['Tous', ...Array.from(set).sort()];
+  });
+
+  constructor() {
+    this.loadFromStorage();
+
+    effect(() => {
+      const payload: PersistV1 = {
+        v: 1,
+        toggles: {
+          includeExtrasUnicode: this.includeExtrasUnicode(),
+          enableEmojibaseFr: this.enableEmojibaseFr(),
+          enableFlagIntl: this.enableFlagIntl(),
+        },
+        selectedHexes: this._selectedHexes(),
+        overrides: this._overrides(),
+      };
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(payload));
+      } catch {
+        // ignore
+      }
+    });
+  }
+
+  private loadFromStorage() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return;
+      const p = JSON.parse(raw) as PersistV1;
+      if (!p || p.v !== 1) return;
+
+      this.includeExtrasUnicode.set(!!p.toggles?.includeExtrasUnicode);
+      this.enableEmojibaseFr.set(!!p.toggles?.enableEmojibaseFr);
+      this.enableFlagIntl.set(!!p.toggles?.enableFlagIntl);
+
+      this._selectedHexes.set((p.selectedHexes ?? []).map(s => String(s).toUpperCase()));
+      this._overrides.set(p.overrides ?? {});
+    } catch {
+      // ignore
+    }
+  }
+
+  setItems(items: EmojiItem[]) {
+    this._items.set(items.map(i => ({ ...i, hexcode: i.hexcode.toUpperCase() })));
+    if (!this.activeHexcode() && this._selectedHexes().length) {
+      this.activeHexcode.set(this._selectedHexes()[0]);
+    }
+  }
+
+  toggle(hex: string, value?: boolean) {
+    const h = hex.toUpperCase();
+    const set = new Set(this._selectedHexes());
+    const next = value ?? !set.has(h);
+    if (next) set.add(h);
+    else set.delete(h);
+    this._selectedHexes.set(Array.from(set));
+
+    if (next && !this.activeHexcode()) this.activeHexcode.set(h);
+    if (!next && this.activeHexcode() === h) this.activeHexcode.set(this._selectedHexes()[0] ?? null);
+  }
+
+  remove(hex: string) { this.toggle(hex, false); }
+  setActive(hex: string) { this.activeHexcode.set(hex.toUpperCase()); }
+
+  setOverride(hex: string, label: string) {
+    const h = hex.toUpperCase();
+    const clean = (label ?? '').trim();
+    this._overrides.update(prev => ({ ...prev, [h]: clean }));
+  }
+
+  clearOverride(hex: string) {
+    const h = hex.toUpperCase();
+    this._overrides.update(prev => {
+      const { [h]: _, ...rest } = prev;
+      return rest;
+    });
+  }
+
+  applyOverridesFromText(text: string) {
+    const map: Record<string, string> = { ...this._overrides() };
+
+    for (const line of (text ?? '').split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const idx = trimmed.indexOf('=');
+      if (idx < 0) continue;
+
+      const hex = trimmed.slice(0, idx).trim().toUpperCase();
+      const label = trimmed.slice(idx + 1).trim();
+      if (hex && label) map[hex] = label;
+    }
+
+    this._overrides.set(map);
+  }
+}
+
+
+===== FILE: src/app/pages/catalog/catalog.html =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\catalog\catalog.html
+
+<div class="top">
+  <button mat-raised-button (click)="load()" [disabled]="loading()">
+    Recharger
+  </button>
+
+  <mat-slide-toggle
+    [checked]="store.includeExtrasUnicode()"
+    (change)="store.includeExtrasUnicode.set($event.checked)"
+  >
+    Inclure extras
+  </mat-slide-toggle>
+
+  <mat-slide-toggle
+    [checked]="store.enableEmojibaseFr()"
+    (change)="store.enableEmojibaseFr.set($event.checked)"
+  >
+    Emojibase FR
+  </mat-slide-toggle>
+
+  <mat-slide-toggle
+    [checked]="store.enableFlagIntl()"
+    (change)="store.enableFlagIntl.set($event.checked)"
+  >
+    Drapeaux (Intl)
+  </mat-slide-toggle>
+
+  <mat-form-field appearance="outline" class="search">
+    <mat-label>Recherche</mat-label>
+    <input
+      matInput
+      [value]="store.query()"
+      (input)="store.query.set(($any($event.target).value || ''))"
+      placeholder="hex, nom, tags..."
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="group">
+    <mat-label>Groupe</mat-label>
+    <mat-select [value]="store.groupFilter()" (selectionChange)="store.groupFilter.set($event.value)">
+      @for (g of store.groups(); track g) {
+        <mat-option [value]="g">{{ g }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+@if (error()) {
+  <p class="error">Erreur: {{ error() }}</p>
+}
+
+@if (loading()) {
+  <p class="hint">Chargement…</p>
+}
+
+@if (!store.items().length && !loading()) {
+  <p class="hint">Clique “Recharger”.</p>
+}
+
+<mat-accordion>
+  @for (entry of groups(); track entry[0]) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ entry[0] }}</mat-panel-title>
+        <mat-panel-description>
+          {{ entry[1].length }} visibles · {{ selectedCountByGroup().get(entry[0]) ?? 0 }} cochés
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="group-actions">
+        <button mat-stroked-button (click)="selectAllInGroup(entry[0])">Tout cocher</button>
+        <button mat-stroked-button (click)="deselectAllInGroup(entry[0])">Tout décocher</button>
+      </div>
+
+      <div class="grid">
+        @for (i of entry[1]; track i.hexcode) {
+          <div class="tile">
+            <mat-checkbox
+              [checked]="i.isSelected"
+              (change)="store.toggle(i.hexcode)"
+            >
+              <span class="label">{{ i.labelResolved || '(sans label)' }}</span>
+            </mat-checkbox>
+
+            <div class="meta">
+              <code>{{ i.hexcode }}</code>
+              <span class="tags">{{ i.subgroup }}</span>
+            </div>
+
+            <img class="svg" [src]="i.svgUrl" [alt]="i.labelResolved" loading="lazy" />
+          </div>
+        }
+      </div>
+    </mat-expansion-panel>
+  }
+</mat-accordion>
+
+
+===== FILE: src/app/pages/catalog/catalog.scss =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\catalog\catalog.scss
+
+.top {
+  display: grid;
+  grid-template-columns: auto auto auto auto 1fr 280px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.search { width: 100%; }
+.group { width: 280px; }
+
+.error { color: #b00020; }
+.hint { opacity: 0.8; }
+
+.group-actions {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 12px;
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.svg {
+  width: 72px;
+  height: 72px;
+}
+
+.meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+.label { margin-left: 8px; }
+.tags { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+
+===== FILE: src/app/pages/catalog/catalog.spec.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\catalog\catalog.spec.ts
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { Catalog } from './catalog';
+
+describe('Catalog', () => {
+  let component: Catalog;
+  let fixture: ComponentFixture<Catalog>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Catalog]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(Catalog);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+
+===== FILE: src/app/pages/catalog/catalog.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\catalog\catalog.ts
+
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
+
+import type { EmojiItem } from '../../core/models/emoji.models';
+import { EmojiCatalogService } from '../../core/services/emoji-catalog';
+import { SelectionStoreService } from '../../core/services/selection-store';
+
+@Component({
+  selector: 'app-catalog',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatExpansionModule,
+  ],
+  templateUrl: './catalog.html',
+  styleUrl: './catalog.scss',
+})
+export class CatalogComponent {
+  private readonly catalog = inject(EmojiCatalogService);
+  readonly store = inject(SelectionStoreService);
+
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+
+  readonly filtered = computed(() => {
+    const q = this.store.query().trim().toLowerCase();
+    const groupFilter = this.store.groupFilter();
+    const items = this.store.items();
+
+    return items.filter(i => {
+      if (groupFilter !== 'Tous' && i.group !== groupFilter) return false;
+      if (!q) return true;
+
+      const hay = [
+        i.hexcode,
+        i.labelResolved,
+        i.labelOpenMoji,
+        i.group,
+        i.subgroup,
+        ...(i.tags ?? []),
+      ].join(' ').toLowerCase();
+
+      return hay.includes(q);
+    });
+  });
+
+  readonly groups = computed(() => {
+    const map = new Map<string, EmojiItem[]>();
+    for (const i of this.filtered()) {
+      const arr = map.get(i.group) ?? [];
+      arr.push(i);
+      map.set(i.group, arr);
+    }
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  });
+
+  readonly selectedCountByGroup = computed(() => {
+    const map = new Map<string, number>();
+    for (const it of this.store.selected()) {
+      map.set(it.group, (map.get(it.group) ?? 0) + 1);
+    }
+    return map;
+  });
+
+  constructor() {
+    // Auto-load once, and reload when includeExtras / enableEmojibase changes (data shape changes)
+    effect(() => {
+      const needReload = [
+        this.store.includeExtrasUnicode(),
+        this.store.enableEmojibaseFr(),
+      ];
+      void needReload;
+
+      if (!this.store.items().length && !this.loading()) {
+        this.load();
+      } else {
+        // If user toggles these AFTER having loaded, reload dataset
+        // (safe: doesn't lose selection/overrides because store persists by hex)
+        this.load();
+      }
+    });
+  }
+
+  async load() {
+    if (this.loading()) return;
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const items = await this.catalog.buildItems({
+        includeExtrasUnicode: this.store.includeExtrasUnicode(),
+        enableEmojibaseFr: this.store.enableEmojibaseFr(),
+      });
+      this.store.setItems(items);
+      //console.log("items",items);
+      
+    } catch (e: any) {
+      this.error.set(e?.message ?? 'Erreur inconnue');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  selectAllInGroup(group: string) {
+    for (const i of this.store.items()) {
+      if (i.group === group) this.store.toggle(i.hexcode, true);
+    }
+  }
+
+  deselectAllInGroup(group: string) {
+    for (const i of this.store.items()) {
+      if (i.group === group) this.store.toggle(i.hexcode, false);
+    }
+  }
+}
+
+
+===== FILE: src/app/pages/export/export.html =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\export\export.html
+
+<h2>Export</h2>
+
+@if (!selected().length) {
+  <p class="hint">Aucun emoji sélectionné. Va à “Sélection”.</p>
+} @else {
+  <div class="layout">
+    <!-- LEFT: Controls -->
+    <section class="panel">
+      <p class="hint">{{ selected().length }} emojis sélectionnés.</p>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="w320">
+          <mat-label>Mode</mat-label>
+          <mat-select [value]="mode()" (selectionChange)="mode.set($event.value)">
+            <mat-option value="A">Mode A — 1 vignette (emoji + texte)</mat-option>
+            <mat-option value="B">Mode B — 2 vignettes (emoji seul + texte seul)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w320">
+          <mat-label>Aperçu carte</mat-label>
+          <mat-select
+            [value]="previewHex() ?? selected()[0].hexcode"
+            (selectionChange)="setPreviewHex($event.value)"
+          >
+            @for (it of selected(); track it.hexcode) {
+              <mat-option [value]="it.hexcode">
+                {{ it.labelResolved || it.labelOpenMoji || it.hexcode }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <button mat-stroked-button (click)="prevPreview()">◀ Précédent</button>
+        <button mat-stroked-button (click)="nextPreview()">Suivant ▶</button>
+      </div>
+
+      <div class="row">
+        <button mat-stroked-button (click)="setBg('white')">Fond blanc</button>
+        <button mat-stroked-button (click)="setBg('transparent')">Fond transparent</button>
+
+        <mat-form-field appearance="outline" class="w180">
+          <mat-label>Zoom</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.1"
+            min="0.2"
+            max="3"
+            [value]="zoom()"
+            (input)="setZoom($any($event.target).value)"
+          />
+        </mat-form-field>
+
+        <button mat-stroked-button (click)="zoom.set(1)">100%</button>
+      </div>
+
+      @if (mode() === 'A') {
+        <h3>Réglages Mode A</h3>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Largeur</mat-label>
+            <input matInput type="number" [value]="a().cardW" (input)="setNum('a.cardW',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hauteur</mat-label>
+            <input matInput type="number" [value]="a().cardH" (input)="setNum('a.cardH',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille emoji</mat-label>
+            <input matInput type="number" [value]="a().emojiSize" (input)="setNum('a.emojiSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille police</mat-label>
+            <input matInput type="number" [value]="a().fontSize" (input)="setNum('a.fontSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Espace emoji/texte</mat-label>
+            <input matInput type="number" [value]="a().gapEmojiText" (input)="setNum('a.gapEmojiText',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bordure (px)</mat-label>
+            <input matInput type="number" [value]="a().borderPx" (input)="setNum('a.borderPx',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rayon (px)</mat-label>
+            <input matInput type="number" [value]="a().radiusPx" (input)="setNum('a.radiusPx',$any($event.target).value)" />
+          </mat-form-field>
+        </div>
+      } @else {
+        <h3>Réglages Mode B</h3>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Emoji W</mat-label>
+            <input matInput type="number" [value]="b().emojiCardW" (input)="setNum('b.emojiCardW',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Emoji H</mat-label>
+            <input matInput type="number" [value]="b().emojiCardH" (input)="setNum('b.emojiCardH',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille emoji</mat-label>
+            <input matInput type="number" [value]="b().emojiSize" (input)="setNum('b.emojiSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Texte W</mat-label>
+            <input matInput type="number" [value]="b().textCardW" (input)="setNum('b.textCardW',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Texte H</mat-label>
+            <input matInput type="number" [value]="b().textCardH" (input)="setNum('b.textCardH',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Taille police</mat-label>
+            <input matInput type="number" [value]="b().fontSize" (input)="setNum('b.fontSize',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bordure (px)</mat-label>
+            <input matInput type="number" [value]="b().borderPx" (input)="setNum('b.borderPx',$any($event.target).value)" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rayon (px)</mat-label>
+            <input matInput type="number" [value]="b().radiusPx" (input)="setNum('b.radiusPx',$any($event.target).value)" />
+          </mat-form-field>
+        </div>
+      }
+
+      <h3>Planches</h3>
+
+      @if (mode() === 'B') {
+        <div class="row">
+          <button
+            mat-stroked-button
+            [class.active]="bSheetLayout() === 'mixed'"
+            (click)="setBSheetLayout('mixed')"
+          >Planches mixées</button>
+
+          <button
+            mat-stroked-button
+            [class.active]="bSheetLayout() === 'split'"
+            (click)="setBSheetLayout('split')"
+          >Planches séparées (emoji + mots)</button>
+        </div>
+      }
+
+      <div class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Colonnes</mat-label>
+          <input matInput type="number" min="1" max="50" [value]="sheet().cols" (input)="setNum('sheet.cols',$any($event.target).value)" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Rangées</mat-label>
+          <input matInput type="number" min="1" max="50" [value]="sheet().rows" (input)="setNum('sheet.rows',$any($event.target).value)" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Gap (px)</mat-label>
+          <input matInput type="number" min="0" [value]="sheet().gap" (input)="setNum('sheet.gap',$any($event.target).value)" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <button mat-raised-button (click)="exportCards()">Export — 1 PNG par carte</button>
+        <button mat-raised-button (click)="exportSheets()">Export — Planches PNG</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: WYSIWYG -->
+    <section class="panel previewPanel">
+      <!-- CARD PREVIEW -->
+      <div class="previewHeader">
+        <div class="title">Aperçu carte (WYSIWYG)</div>
+        <div class="meta">
+          <span>Export: <strong>{{ lastSize().w }}</strong>×<strong>{{ lastSize().h }}</strong> px</span>
+          <span class="dot">•</span>
+          <span>Zoom: <strong>{{ (zoom() * 100) | number:'1.0-0' }}</strong>%</span>
+          <span class="dot">•</span>
+          <span>BG: <strong>{{ (mode() === 'A' ? a().background : b().background) }}</strong></span>
+        </div>
+      </div>
+
+      <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+        <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+          <canvas #preview></canvas>
+        </div>
+      </div>
+
+      <p class="hint">
+        Ce canvas est le rendu exact d’une carte (mêmes dimensions, mêmes bordures, même texte).
+        Le damier sert juste à visualiser la transparence.
+      </p>
+
+      <hr class="sep" />
+
+      <!-- SHEETS PREVIEW -->
+      @if (mode() === 'B' && bSheetLayout() === 'split') {
+        <!-- EMOJI SHEET -->
+        <div class="previewHeader">
+          <div class="title">Aperçu planche — Emojis</div>
+          <div class="meta">
+            <span>Page: <strong>{{ sheetPageEmoji() }}</strong>/<strong>{{ sheetTotalEmoji() }}</strong></span>
+            <span class="dot">•</span>
+            <span>Export: <strong>{{ sheetLastSizeEmoji().w }}</strong>×<strong>{{ sheetLastSizeEmoji().h }}</strong> px</span>
+            <span class="dot">•</span>
+            <span>{{ sheet().cols }}×{{ sheet().rows }} • gap {{ sheet().gap }} px</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <button mat-stroked-button (click)="prevSheetEmoji()">◀ Page</button>
+
+          <mat-form-field appearance="outline" class="w180">
+            <mat-label>Page</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              [max]="sheetTotalEmoji()"
+              [value]="sheetPageEmoji()"
+              (input)="setSheetPageEmoji($any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <button mat-stroked-button (click)="nextSheetEmoji()">Page ▶</button>
+        </div>
+
+        <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+          <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+            <canvas #sheetPreviewEmoji></canvas>
+          </div>
+        </div>
+
+        <p class="hint">
+          Planche d’emojis uniquement (Mode B séparé). Le damier sert juste à visualiser la transparence.
+        </p>
+
+        <hr class="sep" />
+
+        <!-- TEXT SHEET -->
+        <div class="previewHeader">
+          <div class="title">Aperçu planche — Mots</div>
+          <div class="meta">
+            <span>Page: <strong>{{ sheetPageText() }}</strong>/<strong>{{ sheetTotalText() }}</strong></span>
+            <span class="dot">•</span>
+            <span>Export: <strong>{{ sheetLastSizeText().w }}</strong>×<strong>{{ sheetLastSizeText().h }}</strong> px</span>
+            <span class="dot">•</span>
+            <span>{{ sheet().cols }}×{{ sheet().rows }} • gap {{ sheet().gap }} px</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <button mat-stroked-button (click)="prevSheetText()">◀ Page</button>
+
+          <mat-form-field appearance="outline" class="w180">
+            <mat-label>Page</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              [max]="sheetTotalText()"
+              [value]="sheetPageText()"
+              (input)="setSheetPageText($any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <button mat-stroked-button (click)="nextSheetText()">Page ▶</button>
+        </div>
+
+        <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+          <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+            <canvas #sheetPreviewText></canvas>
+          </div>
+        </div>
+
+        <p class="hint">
+          Planche de mots uniquement (Mode B séparé). Le damier sert juste à visualiser la transparence.
+        </p>
+      } @else {
+        <!-- MIXED / MODE A SHEET -->
+        <div class="previewHeader">
+          <div class="title">Aperçu planche (WYSIWYG)</div>
+          <div class="meta">
+            <span>Page: <strong>{{ sheetPageAll() }}</strong>/<strong>{{ sheetTotalAll() }}</strong></span>
+            <span class="dot">•</span>
+            <span>Export: <strong>{{ sheetLastSizeAll().w }}</strong>×<strong>{{ sheetLastSizeAll().h }}</strong> px</span>
+            <span class="dot">•</span>
+            <span>{{ sheet().cols }}×{{ sheet().rows }} • gap {{ sheet().gap }} px</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <button mat-stroked-button (click)="prevSheetAll()">◀ Page</button>
+
+          <mat-form-field appearance="outline" class="w180">
+            <mat-label>Page</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              [max]="sheetTotalAll()"
+              [value]="sheetPageAll()"
+              (input)="setSheetPageAll($any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <button mat-stroked-button (click)="nextSheetAll()">Page ▶</button>
+        </div>
+
+        <div class="previewStage" [class.transparentStage]="isTransparentBg()">
+          <div class="canvasWrap" [style.transform]="'scale(' + zoom() + ')'">
+            <canvas #sheetPreview></canvas>
+          </div>
+        </div>
+
+        <p class="hint">
+          Ce canvas est le rendu exact de l’export “Planches PNG”.
+          Le damier sert juste à visualiser la transparence.
+        </p>
+      }
+    </section>
+  </div>
+}
+
+
+===== FILE: src/app/pages/export/export.scss =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\export\export.scss
+
+.hint { opacity: 0.8; }
+.row { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; align-items: center; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+
+.w320 { width: 320px; max-width: 100%; }
+.w180 { width: 180px; max-width: 100%; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+}
+
+.previewPanel { position: sticky; top: 12px; }
+
+.previewHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  .title { font-size: 18px; font-weight: 600; }
+  .meta { opacity: 0.85; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .dot { opacity: 0.5; }
+}
+
+.previewStage {
+  border: 1px dashed rgba(0,0,0,0.25);
+  border-radius: 12px;
+  min-height: 320px;
+  padding: 14px;
+  overflow: auto;
+  background: #f7f7f7;
+}
+
+.transparentStage {
+  /* damier de transparence (visualisation uniquement) */
+  background-image:
+    linear-gradient(45deg, rgba(0,0,0,0.06) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0,0,0,0.06) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.06) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.06) 75%);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+}
+
+.canvasWrap {
+  transform-origin: top left;
+  display: inline-block;
+}
+
+canvas {
+  display: block;
+}
+
+.sep {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.12);
+  margin: 16px 0;
+}
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .previewPanel { position: static; }
+}
+
+/* ===== AJOUTS ===== */
+
+/* Boutons "Planches mixées / séparées" */
+button.active {
+  border-color: rgba(0,0,0,0.55) !important;
+  background: rgba(0,0,0,0.06) !important;
+}
+
+/* Optionnel: quand on affiche 2 planches, on peut réduire un peu la hauteur mini */
+.previewStage.compact {
+  min-height: 220px;
+}
+
+
+===== FILE: src/app/pages/export/export.spec.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\export\export.spec.ts
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { Export } from './export';
+
+describe('Export', () => {
+  let component: Export;
+  let fixture: ComponentFixture<Export>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Export]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(Export);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+
+===== FILE: src/app/pages/export/export.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\export\export.ts
+
+import { AfterViewInit, Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+
+import {
+  CardMode,
+  ModeASettings,
+  ModeBSettings,
+  SheetSettings,
+  EmojiExporterService,
+  SheetVariant
+} from '../../core/services/emoji-exporter';
+import { SelectionStoreService } from '../../core/services/selection-store';
+
+type SheetLayoutB = 'mixed' | 'split';
+
+type ExportPersist = {
+  v: 3; // bump
+  mode: CardMode;
+  a: ModeASettings;
+  b: ModeBSettings;
+  sheet: SheetSettings;
+  previewHex: string | null;
+  zoom: number;
+
+  // NEW
+  bSheetLayout: SheetLayoutB;
+
+  // pages for sheets
+  sheetPageAll: number;
+
+  sheetPageEmoji: number;
+  sheetPageText: number;
+};
+
+const LS_KEY = 'emoji-en-folie:export:v3';
+
+@Component({
+  selector: 'app-export',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  templateUrl: './export.html',
+  styleUrl: './export.scss',
+})
+export class ExportComponent implements AfterViewInit {
+  private readonly store = inject(SelectionStoreService);
+  private readonly exporter = inject(EmojiExporterService);
+
+  readonly selected = computed(() => this.store.selected());
+
+  readonly mode = signal<CardMode>('A');
+
+  readonly a = signal<ModeASettings>({
+    cardW: 320, cardH: 260,
+    emojiSize: 120,
+    fontSize: 28,
+    gapEmojiText: 10,
+    borderPx: 6,
+    radiusPx: 18,
+    background: 'white',
+  });
+
+  readonly b = signal<ModeBSettings>({
+    emojiCardW: 240, emojiCardH: 240,
+    emojiSize: 140,
+    textCardW: 240, textCardH: 140,
+    fontSize: 28,
+    borderPx: 6,
+    radiusPx: 18,
+    background: 'white',
+  });
+
+  readonly sheet = signal<SheetSettings>({
+    cols: 6,
+    gap: 16,
+    rows: 4,
+  });
+
+  // NEW: Mode B layout for sheets
+  readonly bSheetLayout = signal<SheetLayoutB>('mixed');
+
+  // WYSIWYG (single card)
+  readonly previewHex = signal<string | null>(null);
+  readonly zoom = signal<number>(1);
+  readonly lastSize = signal<{ w: number; h: number }>({ w: 0, h: 0 });
+
+  readonly previewCanvas = viewChild<ElementRef<HTMLCanvasElement>>('preview');
+
+  readonly previewItem = computed(() => {
+    const list = this.selected();
+    if (!list.length) return null;
+
+    const hex = this.previewHex();
+    if (!hex) return list[0];
+
+    return list.find(x => x.hexcode === hex) ?? list[0];
+  });
+
+  // ===== WYSIWYG planche - MIXED (all) =====
+  readonly sheetPageAll = signal<number>(1);
+  readonly sheetTotalAll = signal<number>(1);
+  readonly sheetLastSizeAll = signal<{ w: number; h: number }>({ w: 0, h: 0 });
+  readonly sheetPreviewCanvasAll = viewChild<ElementRef<HTMLCanvasElement>>('sheetPreview');
+
+  private sheetRunIdAll = 0;
+
+  // ===== WYSIWYG planche - SPLIT emoji =====
+  readonly sheetPageEmoji = signal<number>(1);
+  readonly sheetTotalEmoji = signal<number>(1);
+  readonly sheetLastSizeEmoji = signal<{ w: number; h: number }>({ w: 0, h: 0 });
+  readonly sheetPreviewCanvasEmoji = viewChild<ElementRef<HTMLCanvasElement>>('sheetPreviewEmoji');
+
+  private sheetRunIdEmoji = 0;
+
+  // ===== WYSIWYG planche - SPLIT text =====
+  readonly sheetPageText = signal<number>(1);
+  readonly sheetTotalText = signal<number>(1);
+  readonly sheetLastSizeText = signal<{ w: number; h: number }>({ w: 0, h: 0 });
+  readonly sheetPreviewCanvasText = viewChild<ElementRef<HTMLCanvasElement>>('sheetPreviewText');
+
+  private sheetRunIdText = 0;
+
+  constructor() {
+    this.loadExportSettings();
+
+    // Persist settings
+    effect(() => {
+      const payload: ExportPersist = {
+        v: 3,
+        mode: this.mode(),
+        a: this.a(),
+        b: this.b(),
+        sheet: this.sheet(),
+        previewHex: this.previewHex(),
+        zoom: this.zoom(),
+        bSheetLayout: this.bSheetLayout(),
+
+        sheetPageAll: this.sheetPageAll(),
+        sheetPageEmoji: this.sheetPageEmoji(),
+        sheetPageText: this.sheetPageText(),
+      };
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(payload));
+      } catch {
+        // ignore
+      }
+    });
+
+    // === clamp + totals (all) ===
+    effect(() => {
+      void this.mode();
+      void this.bSheetLayout();
+      void this.sheet();
+      void this.selected().length;
+
+      this.sheetTotalAll.set(this.computeSheetTotal('all'));
+
+      const p = this.sheetPageAll();
+      const total = this.sheetTotalAll();
+      if (p < 1) this.sheetPageAll.set(1);
+      else if (p > total) this.sheetPageAll.set(total);
+    });
+
+    // === clamp + totals (emoji/text) ===
+    effect(() => {
+      void this.mode();
+      void this.bSheetLayout();
+      void this.sheet();
+      void this.selected().length;
+
+      // only meaningful in mode B + split
+      this.sheetTotalEmoji.set(this.computeSheetTotal('emoji'));
+      this.sheetTotalText.set(this.computeSheetTotal('text'));
+
+      const pE = this.sheetPageEmoji();
+      const tE = this.sheetTotalEmoji();
+      if (pE < 1) this.sheetPageEmoji.set(1);
+      else if (pE > tE) this.sheetPageEmoji.set(tE);
+
+      const pT = this.sheetPageText();
+      const tT = this.sheetTotalText();
+      if (pT < 1) this.sheetPageText.set(1);
+      else if (pT > tT) this.sheetPageText.set(tT);
+    });
+
+    // Auto refresh planche preview(s)
+    effect(() => {
+      void this.mode();
+      void this.bSheetLayout();
+      void this.a();
+      void this.b();
+      void this.sheet();
+      void this.selected().length;
+
+      void this.sheetPageAll();
+      void this.sheetPageEmoji();
+      void this.sheetPageText();
+
+      // refresh whichever is visible; harmless if canvas not in DOM (viewChild null)
+      this.refreshSheetPreviewAll();
+      this.refreshSheetPreviewEmoji();
+      this.refreshSheetPreviewText();
+    });
+
+    // Auto refresh single-card preview
+    effect(() => {
+      void this.mode();
+      void this.a();
+      void this.b();
+      void this.previewHex();
+      void this.selected().length;
+      this.refreshPreview();
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.refreshPreview();
+    this.refreshSheetPreviewAll();
+    this.refreshSheetPreviewEmoji();
+    this.refreshSheetPreviewText();
+  }
+
+  isTransparentBg() {
+    const bg = this.mode() === 'A' ? this.a().background : this.b().background;
+    return bg === 'transparent';
+  }
+
+  setZoom(value: any) {
+    const v = Number(value);
+    if (!Number.isFinite(v)) return;
+    this.zoom.set(Math.max(0.2, Math.min(3, Math.round(v * 10) / 10)));
+  }
+
+  setPreviewHex(hex: string) {
+    this.previewHex.set(hex || null);
+  }
+
+  prevPreview() {
+    const list = this.selected();
+    if (!list.length) return;
+    const cur = this.previewItem();
+    const idx = cur ? list.findIndex(x => x.hexcode === cur.hexcode) : 0;
+    const next = (idx - 1 + list.length) % list.length;
+    this.previewHex.set(list[next].hexcode);
+  }
+
+  nextPreview() {
+    const list = this.selected();
+    if (!list.length) return;
+    const cur = this.previewItem();
+    const idx = cur ? list.findIndex(x => x.hexcode === cur.hexcode) : 0;
+    const next = (idx + 1) % list.length;
+    this.previewHex.set(list[next].hexcode);
+  }
+
+  setBSheetLayout(layout: SheetLayoutB) {
+    this.bSheetLayout.set(layout);
+  }
+
+  private loadExportSettings() {
+    const legacyKeyV2 = 'emoji-en-folie:export:v2';
+    const legacyKeyV1 = 'emoji-en-folie:export:v1';
+
+    try {
+      const raw = localStorage.getItem(LS_KEY) ?? localStorage.getItem(legacyKeyV2) ?? localStorage.getItem(legacyKeyV1);
+      if (!raw) return;
+
+      const p = JSON.parse(raw) as any;
+
+      // v3
+      if (p?.v === 3) {
+        this.mode.set(p.mode);
+        this.a.set(p.a);
+        this.b.set(p.b);
+
+        const sh: any = p.sheet ?? {};
+        this.sheet.set({
+          cols: sh.cols ?? 6,
+          rows: sh.rows ?? 4,
+          gap: sh.gap ?? 16,
+        });
+
+        this.previewHex.set(p.previewHex ?? null);
+        this.zoom.set(Number.isFinite(p.zoom) ? p.zoom : 1);
+
+        this.bSheetLayout.set(p.bSheetLayout === 'split' ? 'split' : 'mixed');
+
+        this.sheetPageAll.set(Number.isFinite(p.sheetPageAll) ? Math.max(1, Math.floor(p.sheetPageAll)) : 1);
+        this.sheetPageEmoji.set(Number.isFinite(p.sheetPageEmoji) ? Math.max(1, Math.floor(p.sheetPageEmoji)) : 1);
+        this.sheetPageText.set(Number.isFinite(p.sheetPageText) ? Math.max(1, Math.floor(p.sheetPageText)) : 1);
+
+        this.clampSheet();
+        this.setZoom(this.zoom());
+        return;
+      }
+
+      // v2 fallback
+      if (p?.v === 2) {
+        this.mode.set(p.mode);
+        this.a.set(p.a);
+        this.b.set(p.b);
+
+        const sh: any = p.sheet ?? {};
+        this.sheet.set({
+          cols: sh.cols ?? 6,
+          rows: sh.rows ?? 4,
+          gap: sh.gap ?? 16,
+        });
+
+        this.previewHex.set(p.previewHex ?? null);
+        this.zoom.set(Number.isFinite(p.zoom) ? p.zoom : 1);
+
+        this.bSheetLayout.set('mixed');
+
+        this.clampSheet();
+        this.setZoom(this.zoom());
+        return;
+      }
+
+      // v1 fallback
+      if (p?.v === 1) {
+        this.mode.set(p.mode);
+        this.a.set(p.a);
+        this.b.set(p.b);
+
+        const sh: any = p.sheet ?? {};
+        this.sheet.set({
+          cols: sh.cols ?? 6,
+          rows: sh.rows ?? 4,
+          gap: sh.gap ?? 16,
+        });
+
+        this.bSheetLayout.set('mixed');
+        this.clampSheet();
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  private clampSheet() {
+    const s: any = this.sheet();
+    const MAX_DIM = 50;
+
+    this.sheet.set({
+      cols: Math.max(1, Math.min(MAX_DIM, Math.floor(s.cols))),
+      rows: Math.max(1, Math.min(MAX_DIM, Math.floor(s.rows ?? 4))),
+      gap: Math.max(0, Math.floor(s.gap)),
+    });
+  }
+
+  setNum(path: string, value: any) {
+    const v = Number(value);
+    if (!Number.isFinite(v)) return;
+
+    if (path.startsWith('a.')) {
+      const key = path.slice(2) as keyof ModeASettings;
+      this.a.set({ ...this.a(), [key]: Math.max(0, Math.floor(v)) } as ModeASettings);
+    } else if (path.startsWith('b.')) {
+      const key = path.slice(2) as keyof ModeBSettings;
+      this.b.set({ ...this.b(), [key]: Math.max(0, Math.floor(v)) } as ModeBSettings);
+    } else if (path.startsWith('sheet.')) {
+      const key = path.slice(6) as keyof SheetSettings;
+      this.sheet.set({ ...this.sheet(), [key]: Math.max(0, Math.floor(v)) });
+      this.clampSheet();
+    }
+  }
+
+  setBg(bg: 'white' | 'transparent') {
+    this.a.set({ ...this.a(), background: bg });
+    this.b.set({ ...this.b(), background: bg });
+  }
+
+  async refreshPreview() {
+    const canvasRef = this.previewCanvas();
+    if (!canvasRef) return;
+
+    const canvas = canvasRef.nativeElement;
+    const item = this.previewItem();
+
+    if (!item) {
+      const ctx = canvas.getContext('2d');
+      canvas.width = 360;
+      canvas.height = 220;
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      if (ctx) {
+        ctx.font = '16px Roboto, Arial';
+        ctx.fillText('Aucune sélection.', 12, 30);
+      }
+      this.lastSize.set({ w: canvas.width, h: canvas.height });
+      return;
+    }
+
+    try {
+      await this.exporter.renderPreview(canvas, this.mode(), item, this.a(), this.b());
+      this.lastSize.set({ w: canvas.width, h: canvas.height });
+    } catch {
+      const ctx = canvas.getContext('2d');
+      canvas.width = 420;
+      canvas.height = 240;
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      if (ctx) {
+        ctx.font = '16px Roboto, Arial';
+        ctx.fillText('Preview impossible (SVG/CORS).', 12, 30);
+      }
+      this.lastSize.set({ w: canvas.width, h: canvas.height });
+    }
+  }
+
+  async exportCards() {
+    if (!this.selected().length) return;
+    await this.exporter.exportOnePngPerCard(this.mode(), this.selected(), this.a(), this.b());
+  }
+
+  async exportSheets() {
+    if (!this.selected().length) return;
+    this.clampSheet();
+
+    // Mode B + split => 2 exports
+    if (this.mode() === 'B' && this.bSheetLayout() === 'split') {
+      await this.exporter.exportSheets('B', this.selected(), this.a(), this.b(), this.sheet(), 'emoji', 'planche_emojis');
+      await this.exporter.exportSheets('B', this.selected(), this.a(), this.b(), this.sheet(), 'text', 'planche_mots');
+      return;
+    }
+
+    // default: all / mixed
+    await this.exporter.exportSheets(this.mode(), this.selected(), this.a(), this.b(), this.sheet(), 'all', 'planche');
+  }
+
+  private computeSheetTotal(variant: SheetVariant): number {
+    const n = this.selected().length;
+    if (!n) return 1;
+
+    const cols = Math.max(1, Math.floor(this.sheet().cols));
+    const rows = Math.max(1, Math.floor(this.sheet().rows));
+    const per = Math.max(1, cols * rows);
+
+    const tiles =
+      this.mode() === 'A'
+        ? n
+        : (variant === 'all' ? n * 2 : n);
+
+    return Math.max(1, Math.ceil(tiles / per));
+  }
+
+  // ===== Page setters: all =====
+  setSheetPageAll(value: any) {
+    const v = Math.floor(Number(value));
+    if (!Number.isFinite(v)) return;
+    this.sheetPageAll.set(Math.max(1, Math.min(this.sheetTotalAll(), v)));
+  }
+  prevSheetAll() {
+    this.sheetPageAll.set(Math.max(1, this.sheetPageAll() - 1));
+  }
+  nextSheetAll() {
+    this.sheetPageAll.set(Math.min(this.sheetTotalAll(), this.sheetPageAll() + 1));
+  }
+
+  // ===== Page setters: emoji =====
+  setSheetPageEmoji(value: any) {
+    const v = Math.floor(Number(value));
+    if (!Number.isFinite(v)) return;
+    this.sheetPageEmoji.set(Math.max(1, Math.min(this.sheetTotalEmoji(), v)));
+  }
+  prevSheetEmoji() {
+    this.sheetPageEmoji.set(Math.max(1, this.sheetPageEmoji() - 1));
+  }
+  nextSheetEmoji() {
+    this.sheetPageEmoji.set(Math.min(this.sheetTotalEmoji(), this.sheetPageEmoji() + 1));
+  }
+
+  // ===== Page setters: text =====
+  setSheetPageText(value: any) {
+    const v = Math.floor(Number(value));
+    if (!Number.isFinite(v)) return;
+    this.sheetPageText.set(Math.max(1, Math.min(this.sheetTotalText(), v)));
+  }
+  prevSheetText() {
+    this.sheetPageText.set(Math.max(1, this.sheetPageText() - 1));
+  }
+  nextSheetText() {
+    this.sheetPageText.set(Math.min(this.sheetTotalText(), this.sheetPageText() + 1));
+  }
+
+  // ===== Renders =====
+
+  private async drawEmptySheet(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d');
+    canvas.width = 420;
+    canvas.height = 240;
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    if (ctx) {
+      ctx.font = '16px Roboto, Arial';
+      ctx.fillText('Aucune sélection.', 12, 30);
+    }
+  }
+
+  async refreshSheetPreviewAll() {
+    // Only show in: mode A OR mode B mixed
+    if (this.mode() === 'B' && this.bSheetLayout() === 'split') return;
+
+    const canvasRef = this.sheetPreviewCanvasAll();
+    if (!canvasRef) return;
+
+    const canvas = canvasRef.nativeElement;
+    const list = this.selected();
+
+    if (!list.length) {
+      await this.drawEmptySheet(canvas);
+      this.sheetLastSizeAll.set({ w: canvas.width, h: canvas.height });
+      this.sheetTotalAll.set(1);
+      return;
+    }
+
+    const run = ++this.sheetRunIdAll;
+
+    try {
+      const res = await this.exporter.renderSheetPreview(
+        canvas,
+        this.mode(),
+        list,
+        this.a(),
+        this.b(),
+        this.sheet(),
+        this.sheetPageAll() - 1,
+        'all'
+      );
+
+      if (run !== this.sheetRunIdAll) return;
+      this.sheetTotalAll.set(res.totalSheets);
+      this.sheetLastSizeAll.set({ w: canvas.width, h: canvas.height });
+    } catch {
+      if (run !== this.sheetRunIdAll) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 520;
+      canvas.height = 260;
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      if (ctx) {
+        ctx.font = '16px Roboto, Arial';
+        ctx.fillText('Preview planche impossible (SVG/CORS).', 12, 30);
+      }
+      this.sheetLastSizeAll.set({ w: canvas.width, h: canvas.height });
+    }
+  }
+
+  async refreshSheetPreviewEmoji() {
+    // Only show in mode B split
+    if (!(this.mode() === 'B' && this.bSheetLayout() === 'split')) return;
+
+    const canvasRef = this.sheetPreviewCanvasEmoji();
+    if (!canvasRef) return;
+
+    const canvas = canvasRef.nativeElement;
+    const list = this.selected();
+
+    if (!list.length) {
+      await this.drawEmptySheet(canvas);
+      this.sheetLastSizeEmoji.set({ w: canvas.width, h: canvas.height });
+      this.sheetTotalEmoji.set(1);
+      return;
+    }
+
+    const run = ++this.sheetRunIdEmoji;
+
+    try {
+      const res = await this.exporter.renderSheetPreview(
+        canvas,
+        'B',
+        list,
+        this.a(),
+        this.b(),
+        this.sheet(),
+        this.sheetPageEmoji() - 1,
+        'emoji'
+      );
+
+      if (run !== this.sheetRunIdEmoji) return;
+      this.sheetTotalEmoji.set(res.totalSheets);
+      this.sheetLastSizeEmoji.set({ w: canvas.width, h: canvas.height });
+    } catch {
+      if (run !== this.sheetRunIdEmoji) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 520;
+      canvas.height = 260;
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      if (ctx) {
+        ctx.font = '16px Roboto, Arial';
+        ctx.fillText('Preview planche impossible (SVG/CORS).', 12, 30);
+      }
+      this.sheetLastSizeEmoji.set({ w: canvas.width, h: canvas.height });
+    }
+  }
+
+  async refreshSheetPreviewText() {
+    // Only show in mode B split
+    if (!(this.mode() === 'B' && this.bSheetLayout() === 'split')) return;
+
+    const canvasRef = this.sheetPreviewCanvasText();
+    if (!canvasRef) return;
+
+    const canvas = canvasRef.nativeElement;
+    const list = this.selected();
+
+    if (!list.length) {
+      await this.drawEmptySheet(canvas);
+      this.sheetLastSizeText.set({ w: canvas.width, h: canvas.height });
+      this.sheetTotalText.set(1);
+      return;
+    }
+
+    const run = ++this.sheetRunIdText;
+
+    try {
+      const res = await this.exporter.renderSheetPreview(
+        canvas,
+        'B',
+        list,
+        this.a(),
+        this.b(),
+        this.sheet(),
+        this.sheetPageText() - 1,
+        'text'
+      );
+
+      if (run !== this.sheetRunIdText) return;
+      this.sheetTotalText.set(res.totalSheets);
+      this.sheetLastSizeText.set({ w: canvas.width, h: canvas.height });
+    } catch {
+      if (run !== this.sheetRunIdText) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 520;
+      canvas.height = 260;
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      if (ctx) {
+        ctx.font = '16px Roboto, Arial';
+        ctx.fillText('Preview planche impossible (SVG/CORS).', 12, 30);
+      }
+      this.sheetLastSizeText.set({ w: canvas.width, h: canvas.height });
+    }
+  }
+}
+
+
+===== FILE: src/app/pages/selection/selection.html =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\selection\selection.html
+
+<h2>Sélection</h2>
+
+@if (!selected().length) {
+  <p class="hint">Rien de sélectionné pour l’instant.</p>
+} @else {
+  <div class="grid">
+    <section class="list">
+      <h3>Emojis ({{ selected().length }})</h3>
+
+      <mat-nav-list>
+        @for (it of selected(); track it.hexcode) {
+          <a
+            mat-list-item
+            (click)="setActive(it.hexcode)"
+            [class.active]="active()?.hexcode === it.hexcode"
+          >
+            <img class="emoji" [src]="it.svgUrl" alt="" />
+            <span class="label">{{ it.labelResolved || '(sans label)' }}</span>
+
+            <span class="spacer"></span>
+
+            <button
+              mat-button
+              (click)="$event.stopPropagation(); store.toggle(it.hexcode)"
+            >
+              Retirer
+            </button>
+          </a>
+        }
+      </mat-nav-list>
+    </section>
+
+    <section class="editor">
+      @if (active(); as a) {
+        <h3>Libellé</h3>
+
+        <div class="preview">
+          <img class="big" [src]="a.svgUrl" alt="" />
+          <div class="meta">
+            <div><strong>HEX</strong> : <code>{{ a.hexcode }}</code></div>
+            <div><strong>OpenMoji</strong> : {{ a.labelOpenMoji }}</div>
+            @if (a.labelFrAuto) {
+              <div><strong>FR auto</strong> : {{ a.labelFrAuto }}</div>
+            }
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Override (prioritaire)</mat-label>
+          <input
+            matInput
+            [value]="a.labelOverride ?? ''"
+            (input)="updateActiveLabel($any($event.target).value)"
+            placeholder="Ex: Une pomme"
+          />
+        </mat-form-field>
+
+        <div class="row">
+          <button mat-stroked-button (click)="clearActiveOverride()">
+            Retirer l’override
+          </button>
+        </div>
+
+        <h3>Overrides en bloc</h3>
+        <p class="hint">Une ligne par emoji : <code>HEX=Libellé</code></p>
+
+        <mat-form-field appearance="outline" class="full">
+          <textarea
+            matInput
+            rows="8"
+            [value]="bulkText()"
+            (input)="bulkText.set($any($event.target).value)"
+          ></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button (click)="applyBulk()">Appliquer</button>
+      } @else {
+        <p class="hint">Clique un emoji à gauche.</p>
+      }
+    </section>
+  </div>
+}
+
+
+===== FILE: src/app/pages/selection/selection.scss =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\selection\selection.scss
+
+.grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.list, .editor {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+a.active {
+  background: rgba(0,0,0,0.06);
+}
+
+.emoji {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.label { opacity: 0.9; }
+.spacer { flex: 1; }
+
+.full { width: 100%; }
+
+.preview {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin: 8px 0 12px;
+}
+
+.big {
+  width: 72px;
+  height: 72px;
+}
+
+.hint { opacity: 0.8; }
+.row { display: flex; gap: 8px; margin-bottom: 12px; }
+
+
+===== FILE: src/app/pages/selection/selection.spec.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\selection\selection.spec.ts
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { Selection } from './selection';
+
+describe('Selection', () => {
+  let component: Selection;
+  let fixture: ComponentFixture<Selection>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Selection]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(Selection);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+
+===== FILE: src/app/pages/selection/selection.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\app\pages\selection\selection.ts
+
+import { Component, computed, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { SelectionStoreService } from '../../core/services/selection-store';
+
+
+@Component({
+  selector: 'app-selection',
+  standalone: true,
+  imports: [CommonModule, MatListModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  templateUrl: './selection.html',
+  styleUrl: './selection.scss',
+})
+export class SelectionComponent {
+  readonly store = inject(SelectionStoreService);
+
+  readonly selected = computed(() => this.store.selected());
+  readonly active = computed(() => {
+    const hex = this.store.activeHexcode();
+    return this.selected().find(x => x.hexcode === hex) ?? this.selected()[0] ?? null;
+  });
+
+  readonly bulkText = signal('');
+
+  setActive(hex: string) {
+    this.store.setActive(hex);
+  }
+
+  updateActiveLabel(value: string) {
+    const a = this.active();
+    if (!a) return;
+    this.store.setOverride(a.hexcode, value || '');
+  }
+
+  clearActiveOverride() {
+    const a = this.active();
+    if (!a) return;
+    this.store.clearOverride(a.hexcode);
+  }
+
+  applyBulk() {
+    this.store.applyOverridesFromText(this.bulkText());
+  }
+}
+
+
+===== FILE: src/environments/environment.ts =====
+// ABSOLUTE: C:\Users\malri\emoji-en-folie\src\environments\environment.ts
+
+export const environment = {
+  production: false,
+
+  // OpenMoji data (lib + svg)
+  openMojiJsonUrl: 'https://cdn.jsdelivr.net/npm/openmoji@15.1.0/data/openmoji.json',
+  openMojiSvgBaseUrl: 'https://unpkg.com/openmoji@15.1.0/color/svg/',
+
+  // Emojibase FR
+  emojibaseFrUrl: 'https://cdn.jsdelivr.net/npm/emojibase-data@17.0.0/fr/compact.json',
+
+  includeExtrasUnicodeDefault: false,
+  enableEmojibaseFrDefault: true,
+  enableFlagIntlDefault: true,
+};

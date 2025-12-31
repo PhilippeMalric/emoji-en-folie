@@ -1,0 +1,50 @@
+.top {
+  display: grid;
+  grid-template-columns: auto auto auto auto 1fr 280px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.search { width: 100%; }
+.group { width: 280px; }
+
+.error { color: #b00020; }
+.hint { opacity: 0.8; }
+
+.group-actions {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 12px;
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.svg {
+  width: 72px;
+  height: 72px;
+}
+
+.meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+.label { margin-left: 8px; }
+.tags { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

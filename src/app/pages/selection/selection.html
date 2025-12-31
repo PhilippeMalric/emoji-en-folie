@@ -1,0 +1,82 @@
+<h2>Sélection</h2>
+
+@if (!selected().length) {
+  <p class="hint">Rien de sélectionné pour l’instant.</p>
+} @else {
+  <div class="grid">
+    <section class="list">
+      <h3>Emojis ({{ selected().length }})</h3>
+
+      <mat-nav-list>
+        @for (it of selected(); track it.hexcode) {
+          <a
+            mat-list-item
+            (click)="setActive(it.hexcode)"
+            [class.active]="active()?.hexcode === it.hexcode"
+          >
+            <img class="emoji" [src]="it.svgUrl" alt="" />
+            <span class="label">{{ it.labelResolved || '(sans label)' }}</span>
+
+            <span class="spacer"></span>
+
+            <button
+              mat-button
+              (click)="$event.stopPropagation(); store.toggle(it.hexcode)"
+            >
+              Retirer
+            </button>
+          </a>
+        }
+      </mat-nav-list>
+    </section>
+
+    <section class="editor">
+      @if (active(); as a) {
+        <h3>Libellé</h3>
+
+        <div class="preview">
+          <img class="big" [src]="a.svgUrl" alt="" />
+          <div class="meta">
+            <div><strong>HEX</strong> : <code>{{ a.hexcode }}</code></div>
+            <div><strong>OpenMoji</strong> : {{ a.labelOpenMoji }}</div>
+            @if (a.labelFrAuto) {
+              <div><strong>FR auto</strong> : {{ a.labelFrAuto }}</div>
+            }
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Override (prioritaire)</mat-label>
+          <input
+            matInput
+            [value]="a.labelOverride ?? ''"
+            (input)="updateActiveLabel($any($event.target).value)"
+            placeholder="Ex: Une pomme"
+          />
+        </mat-form-field>
+
+        <div class="row">
+          <button mat-stroked-button (click)="clearActiveOverride()">
+            Retirer l’override
+          </button>
+        </div>
+
+        <h3>Overrides en bloc</h3>
+        <p class="hint">Une ligne par emoji : <code>HEX=Libellé</code></p>
+
+        <mat-form-field appearance="outline" class="full">
+          <textarea
+            matInput
+            rows="8"
+            [value]="bulkText()"
+            (input)="bulkText.set($any($event.target).value)"
+          ></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button (click)="applyBulk()">Appliquer</button>
+      } @else {
+        <p class="hint">Clique un emoji à gauche.</p>
+      }
+    </section>
+  </div>
+}

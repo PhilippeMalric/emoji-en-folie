@@ -1,0 +1,43 @@
+.grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.list, .editor {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+a.active {
+  background: rgba(0,0,0,0.06);
+}
+
+.emoji {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.label { opacity: 0.9; }
+.spacer { flex: 1; }
+
+.full { width: 100%; }
+
+.preview {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin: 8px 0 12px;
+}
+
+.big {
+  width: 72px;
+  height: 72px;
+}
+
+.hint { opacity: 0.8; }
+.row { display: flex; gap: 8px; margin-bottom: 12px; }
